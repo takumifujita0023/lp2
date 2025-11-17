@@ -4,6 +4,22 @@ import { NextResponse } from 'next/server';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
+  if (
+    !process.env.RESEND_API_KEY ||
+    !process.env.FROM_EMAIL ||
+    !process.env.TO_EMAIL
+  ) {
+    console.error('Env missing', {
+      RESEND_API_KEY: !!process.env.RESEND_API_KEY,
+      FROM_EMAIL: !!process.env.FROM_EMAIL,
+      TO_EMAIL: !!process.env.TO_EMAIL,
+    });
+
+    return NextResponse.json(
+      { error: 'サーバー設定エラー（環境変数）' },
+      { status: 500 }
+    );
+  }
   try {
     const body = await request.json();
     const { company, name, email, purpose, timeline, message } = body;
