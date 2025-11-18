@@ -45,41 +45,42 @@ export default function Home() {
     document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!formData.company || !formData.name || !formData.email) {
-      toast.error('必須項目を入力してください');
-      return;
-    }
+  if (!formData.company || !formData.name || !formData.email) {
+    toast.error('必須項目を入力してください');
+    return;
+  }
 
-    setIsSubmitting(true);
+  setIsSubmitting(true);
 
-    try {
-      const response = await fetch('/api/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+  try {
+    const response = await fetch('/api/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      toast.success('送信が完了しました');
+      setFormData({
+        company: '',
+        name: '',
+        email: '',
+        purpose: '',
+        timeline: '',
+        message: '',
       });
-
-      if (response.ok) {
-        toast.success('送信が完了しました');
-        setFormData({
-          company: '',
-          name: '',
-          email: '',
-          purpose: '',
-          timeline: '',
-          message: '',
-        });
-      } else {
-        toast.error('送信に失敗しました');
-      }
-    } catch (error) {
+    } else {
       toast.error('送信に失敗しました');
-    } finally {
-      setIsSubmitting(false);
     }
+  } catch (error) {
+    toast.error('送信に失敗しました');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   };
 
   return (
