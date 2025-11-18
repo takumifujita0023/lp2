@@ -6,7 +6,13 @@ import { Check, X, Circle, Triangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 import { AnimatedBackground } from '@/components/animated/background';
 import { GlassCard } from '@/components/animated/glass-card';
@@ -14,7 +20,6 @@ import { AnimatedButton } from '@/components/animated/animated-button';
 import { SectionTitle } from '@/components/animated/section-title';
 import { ParallaxShapes } from '@/components/animated/parallax-shapes';
 import { MouseParallax } from '@/components/animated/mouse-parallax';
-import { Counter } from '@/components/animated/counter';
 import { Particles } from '@/components/animated/particles';
 import { GeometricPatterns } from '@/components/animated/geometric-patterns';
 import { FlowingLights } from '@/components/animated/flowing-lights';
@@ -42,7 +47,9 @@ export default function Home() {
   }, []);
 
   const scrollToForm = () => {
-    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+    document
+      .getElementById('contact-form')
+      ?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -82,8 +89,17 @@ export default function Home() {
     }
   };
 
+  // 入力系コンポーネント用の共通クラス（見やすいダークトーン）
+  const inputClass =
+    'bg-slate-900/70 border border-slate-600 text-slate-50 placeholder:text-slate-400 rounded-xl h-12 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/40 transition-all shadow-inner';
+  const selectTriggerClass =
+    'bg-slate-900/70 border border-slate-600 text-slate-50 rounded-xl h-12 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/40 transition-all shadow-inner';
+  const textareaClass =
+    'bg-slate-900/70 border border-slate-600 text-slate-50 placeholder:text-slate-400 rounded-xl min-h-32 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/40 transition-all shadow-inner';
+
   return (
     <div className="min-h-screen bg-[#020617] text-white relative">
+      {/* 背景アニメーションはそのまま */}
       {!prefersReducedMotion && <AnimatedBackground />}
       {!prefersReducedMotion && <Particles />}
       {!prefersReducedMotion && <GeometricPatterns />}
@@ -92,8 +108,7 @@ export default function Home() {
       {!prefersReducedMotion && <MouseParallax />}
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
-
-        {/* ヒーロー（ここはページ読み込み時だけアニメーション残す） */}
+        {/* ====== HERO ====== */}
         <motion.section
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -104,7 +119,8 @@ export default function Home() {
             <motion.div
               className="absolute -inset-20 opacity-20"
               style={{
-                background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)',
+                background:
+                  'radial-gradient(circle, #6366f1 0%, transparent 70%)',
                 filter: 'blur(80px)',
               }}
               animate={
@@ -167,7 +183,7 @@ export default function Home() {
 
         <SectionDivider variant="glow" />
 
-        {/* お悩みセクション（スクロールリビール・遅延をカット） */}
+        {/* ====== 悩みセクション（アニメーションOFF） ====== */}
         <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
           <SectionTitle>こんなお悩みありませんか？</SectionTitle>
           <div className="grid gap-4 sm:gap-6 max-w-3xl mx-auto">
@@ -182,7 +198,9 @@ export default function Home() {
             ].map((item, index) => (
               <GlassCard key={index} delay={0} hover={false}>
                 <div className="p-5 sm:p-6">
-                  <p className="text-[#cbd5e1] text-base sm:text-lg">{item}</p>
+                  <p className="text-[#cbd5e1] text-base sm:text-lg">
+                    {item}
+                  </p>
                 </div>
               </GlassCard>
             ))}
@@ -191,7 +209,7 @@ export default function Home() {
 
         <SectionDivider variant="animated" />
 
-        {/* 強みセクション（カードのディレイを0に） */}
+        {/* ====== 強みセクション（中身は静的） ====== */}
         <section className="mb-24 sm:mb-32 mr-0 sm:mr-8">
           <SectionTitle>私たちの強み</SectionTitle>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -205,32 +223,13 @@ export default function Home() {
             ].map((item, index) => (
               <GlassCard key={index} delay={0}>
                 <div className="p-6 sm:p-8 relative">
-                  <motion.div
-                    className="absolute top-4 right-4 text-6xl font-bold bg-gradient-to-br from-[#4f46e5]/20 to-[#6366f1]/10 bg-clip-text text-transparent"
-                    animate={
-                      !prefersReducedMotion
-                        ? {
-                            opacity: [0.3, 0.6, 0.3],
-                          }
-                        : {}
-                    }
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                      delay: index * 0.2,
-                    }}
-                  >
+                  <div className="absolute top-4 right-4 text-6xl font-bold bg-gradient-to-br from-[#4f46e5]/20 to-[#6366f1]/10 bg-clip-text text-transparent">
                     {String(index + 1).padStart(2, '0')}
-                  </motion.div>
+                  </div>
                   <div className="flex items-start gap-4">
-                    <motion.div
-                      className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-[#4f46e5] to-[#6366f1] flex items-center justify-center shadow-lg shadow-[#6366f1]/50"
-                      whileHover={{ scale: 1.1, rotate: 5, y: -3 }}
-                      transition={{ duration: 0.2 }}
-                    >
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-[#4f46e5] to-[#6366f1] flex items-center justify-center shadow-lg shadow-[#6366f1]/50">
                       <Check className="h-5 w-5" />
-                    </motion.div>
+                    </div>
                     <p className="text-[#cbd5e1] text-base sm:text-lg leading-relaxed">
                       {item}
                     </p>
@@ -243,7 +242,7 @@ export default function Home() {
 
         <SectionDivider variant="glow" />
 
-        {/* 内製化支援 */}
+        {/* ====== 内製化支援 ====== */}
         <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
           <SectionTitle>内製化支援</SectionTitle>
           <GlassCard hover={false} className="max-w-4xl mx-auto">
@@ -261,7 +260,7 @@ export default function Home() {
 
         <SectionDivider variant="glow" />
 
-        {/* 提供スタイル（スクロールリビール削除、ディレイも削除） */}
+        {/* ====== 提供スタイル（スクロールアニメOFF） ====== */}
         <section className="mb-24 sm:mb-32 mr-0 sm:mr-8">
           <SectionTitle>提供スタイル</SectionTitle>
           <div className="max-w-4xl mx-auto">
@@ -273,24 +272,26 @@ export default function Home() {
                 <p className="text-[#cbd5e1] text-lg sm:text-xl mb-8 font-medium">
                   固定プランなし
                 </p>
-                <div className="space-y-3">
-                  <p className="text-[#e2e8f0] text-lg sm:text-xl font-bold mb-6">
-                    組み合わせ自由
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    {['企画', '台本', '撮影', '編集', '投稿代行', '分析', '内製化支援'].map(
-                      (item, index) => (
-                        <motion.span
-                          key={item}
-                          className="bg-white/[0.08] backdrop-blur-sm border border-white/[0.15] px-5 py-3 rounded-xl text-[#e2e8f0] text-base sm:text-lg font-medium hover:bg白/[0.12] hover:border-[#6366f1]/60 hover:shadow-lg hover:shadow-[#6366f1]/20 transition-all"
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          {item}
-                        </motion.span>
-                      )
-                    )}
-                  </div>
+                <p className="text-[#e2e8f0] text-lg sm:text-xl font-bold mb-6">
+                  組み合わせ自由
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {[
+                    '企画',
+                    '台本',
+                    '撮影',
+                    '編集',
+                    '投稿代行',
+                    '分析',
+                    '内製化支援',
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="bg-white/[0.08] backdrop-blur-sm border border-white/[0.15] px-5 py-3 rounded-xl text-[#e2e8f0] text-base sm:text-lg font-medium"
+                    >
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
             </GlassCard>
@@ -299,28 +300,22 @@ export default function Home() {
 
         <SectionDivider variant="animated" />
 
-        {/* 実績（ディレイ削除） */}
+        {/* ====== 実績（カウントアップ・アニメOFF） ====== */}
         <section className="mb-24 sm:mb-32">
           <SectionTitle>実績</SectionTitle>
           <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
             {[
-              { title: '採用支援', result: '半年で', number: 12, suffix: '名採用成功' },
-              { title: '売上改善', result: '動画導線で', number: 150, suffix: '%アップ' },
-              { title: 'インフルエンサー支援', result: 'TikTok ', number: 20000, suffix: '人達成' },
+              { title: '採用支援', text: '半年で12名採用成功' },
+              { title: '売上改善', text: '動画導線で売上150%アップ' },
+              { title: 'インフルエンサー支援', text: 'TikTokフォロワー2万人達成' },
             ].map((item, index) => (
               <GlassCard key={index} delay={0}>
                 <div className="p-6 sm:p-8 text-center">
-                  <motion.h3
-                    className="text-lg sm:text-xl font-bold bg-gradient-to-r from-[#4f46e5] to-[#22d3ee] bg-clip-text text透明 mb-4"
-                    whileHover={{ scale: 1.05 }}
-                  >
+                  <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-[#4f46e5] to-[#22d3ee] bg-clip-text text-transparent mb-4">
                     {item.title}
-                  </motion.h3>
+                  </h3>
                   <p className="text-[#cbd5e1] text-base sm:text-lg leading-relaxed">
-                    {item.result}
-                    <span className="font-bold text-xl sm:text-2xl bg-gradient-to-r from-[#6366f1] to-[#22d3ee] bg-clip-text text-transparent">
-                      <Counter value={item.number} suffix={item.suffix} />
-                    </span>
+                    {item.text}
                   </p>
                 </div>
               </GlassCard>
@@ -330,7 +325,7 @@ export default function Home() {
 
         <SectionDivider variant="glow" />
 
-        {/* 他社比較（motion.tr → tr, アニメ削除） */}
+        {/* ====== 他社比較（スクロールアニメOFF） ====== */}
         <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
           <SectionTitle>他社比較</SectionTitle>
           <div className="overflow-x-auto">
@@ -355,13 +350,13 @@ export default function Home() {
                   </thead>
                   <tbody>
                     {[
-                      { item: 'スピード', us: 'best', them: 'good' },
-                      { item: 'SNS特化', us: 'best', them: 'fair' },
-                      { item: '品質', us: 'best', them: 'best' },
-                      { item: 'コスパ', us: 'best', them: 'fair' },
-                      { item: 'ワンストップ', us: 'best', them: 'poor' },
-                      { item: '内製化支援', us: 'best', them: 'poor' },
-                      { item: '全国対応', us: 'best', them: 'fair' },
+                      { item: 'スピード', them: 'good' },
+                      { item: 'SNS特化', them: 'fair' },
+                      { item: '品質', them: 'best' },
+                      { item: 'コスパ', them: 'fair' },
+                      { item: 'ワンストップ', them: 'poor' },
+                      { item: '内製化支援', them: 'poor' },
+                      { item: '全国対応', them: 'fair' },
                     ].map((row, index) => (
                       <tr
                         key={index}
@@ -432,45 +427,26 @@ export default function Home() {
 
         <SectionDivider variant="animated" />
 
-        {/* ワークフロー（GlassCardのdelayだけ0に） */}
+        {/* ====== ワークフロー（アニメOFF） ====== */}
         <section className="mb-24 sm:mb-32 mr-0 sm:mr-8">
           <SectionTitle>ワークフロー</SectionTitle>
           <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6">
             {[
-              { step: '1', title: 'ヒアリング' },
-              { step: '2', title: '運用設計・企画' },
-              { step: '3', title: '撮影' },
-              { step: '4', title: '編集・投稿' },
-              { step: '5', title: '分析・改善' },
-              { step: '6', title: '内製化へ移行（希望時）' },
-            ].map((item, index) => (
-              <GlassCard key={item.step} delay={0} hover={false}>
+              'ヒアリング',
+              '運用設計・企画',
+              '撮影',
+              '編集・投稿',
+              '分析・改善',
+              '内製化へ移行（希望時）',
+            ].map((title, index) => (
+              <GlassCard key={index} delay={0} hover={false}>
                 <div className="p-6 sm:p-8">
                   <div className="flex items-center gap-4 sm:gap-6">
-                    <motion.div
-                      className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-[#4f46e5] to-[#6366f1] flex items-center justify-center text-xl sm:text-2xl font-bold shadow-lg shadow-[#6366f1]/50"
-                      animate={
-                        !prefersReducedMotion
-                          ? {
-                              boxShadow: [
-                                '0 10px 30px rgba(99, 102, 241, 0.3)',
-                                '0 10px 40px rgba(99, 102, 241, 0.5)',
-                                '0 10px 30px rgba(99, 102, 241, 0.3)',
-                              ],
-                            }
-                          : {}
-                      }
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: index * 0.2,
-                      }}
-                    >
-                      {item.step}
-                    </motion.div>
+                    <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-[#4f46e5] to-[#6366f1] flex items-center justify-center text-xl sm:text-2xl font-bold shadow-lg shadow-[#6366f1]/50">
+                      {index + 1}
+                    </div>
                     <p className="text-[#cbd5e1] text-lg sm:text-xl font-semibold">
-                      {item.title}
+                      {title}
                     </p>
                   </div>
                 </div>
@@ -481,8 +457,14 @@ export default function Home() {
 
         <SectionDivider variant="glow" />
 
-        {/* CTA（スクロールリビール削除） */}
-        <section className="text-center mb-24 sm:mb-32">
+        {/* CTA */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-24 sm:mb-32"
+        >
           <h2 className="text-3xl sm:text-4xl font-bold mb-8">
             SNSで"伝わるカタチ"を
             <br className="sm:hidden" />
@@ -491,58 +473,51 @@ export default function Home() {
           <AnimatedButton onClick={scrollToForm}>
             無料相談を依頼する
           </AnimatedButton>
-        </section>
+        </motion.section>
 
         <SectionDivider variant="glow" />
 
-        {/* フォーム */}
+        {/* ====== 無料相談フォーム（スタイル統一） ====== */}
         <section id="contact-form" className="mb-16">
           <SectionTitle>無料相談フォーム</SectionTitle>
 
           <div className="relative">
-            <motion.div
-              className="absolute -top-20 -left-20 w-64 h-64 rounded-full opacity-10"
-              style={{
-                background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)',
-                filter: 'blur(60px)',
-              }}
-              animate={
-                !prefersReducedMotion
-                  ? {
-                      scale: [1, 1.3, 1],
-                      x: [0, 20, 0],
-                    }
-                  : {}
-              }
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
+            {/* この2つは背景の光なのでそのまま */}
+            {!prefersReducedMotion && (
+              <>
+                <motion.div
+                  className="absolute -top-20 -left-20 w-64 h-64 rounded-full opacity-10"
+                  style={{
+                    background:
+                      'radial-gradient(circle, #6366f1 0%, transparent 70%)',
+                    filter: 'blur(60px)',
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+                <motion.div
+                  className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full opacity-10"
+                  style={{
+                    background:
+                      'radial-gradient(circle, #22d3ee 0%, transparent 70%)',
+                    filter: 'blur(60px)',
+                  }}
+                  transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+              </>
+            )}
 
-            <motion.div
-              className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full opacity-10"
-              style={{
-                background: 'radial-gradient(circle, #22d3ee 0%, transparent 70%)',
-                filter: 'blur(60px)',
-              }}
-              animate={
-                !prefersReducedMotion
-                  ? {
-                      scale: [1, 1.2, 1],
-                      x: [0, -20, 0],
-                    }
-                  : {}
-              }
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-
-            <GlassCard hover={false} className="max-w-3xl mx-auto relative z-10">
+            <GlassCard
+              hover={false}
+              className="max-w-3xl mx-auto relative z-10 bg-slate-900/80 border border-slate-700"
+            >
               <div className="p-6 sm:p-10 lg:p-12">
                 <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
                   <div>
@@ -559,7 +534,7 @@ export default function Home() {
                         setFormData({ ...formData, company: e.target.value })
                       }
                       required
-                      className="bg-white/[0.03] border-white/[0.1] text-white rounded-xl h-12 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner"
+                      className={inputClass}
                       placeholder="株式会社〇〇"
                     />
                   </div>
@@ -578,7 +553,7 @@ export default function Home() {
                         setFormData({ ...formData, name: e.target.value })
                       }
                       required
-                      className="bg-white/[0.03] border-white/[0.1] text白 rounded-xl h-12 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner"
+                      className={inputClass}
                       placeholder="山田太郎"
                     />
                   </div>
@@ -598,7 +573,7 @@ export default function Home() {
                         setFormData({ ...formData, email: e.target.value })
                       }
                       required
-                      className="bg白/[0.03] border白/[0.1] text-white rounded-xl h-12 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner"
+                      className={inputClass}
                       placeholder="example@company.com"
                     />
                   </div>
@@ -616,11 +591,13 @@ export default function Home() {
                         setFormData({ ...formData, purpose: value })
                       }
                     >
-                      <SelectTrigger className="bg白/[0.03] border白/[0.1] text-white rounded-xl h-12 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner">
+                      <SelectTrigger className={selectTriggerClass}>
                         <SelectValue placeholder="選択してください" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#0a0a1e] border-white/[0.1] text-white">
-                        <SelectItem value="customer-acquisition">集客</SelectItem>
+                      <SelectContent className="bg-slate-900 border border-slate-700 text-slate-50">
+                        <SelectItem value="customer-acquisition">
+                          集客
+                        </SelectItem>
                         <SelectItem value="recruitment">採用</SelectItem>
                         <SelectItem value="brand-strengthening">
                           ブランド強化
@@ -644,13 +621,17 @@ export default function Home() {
                         setFormData({ ...formData, timeline: value })
                       }
                     >
-                      <SelectTrigger className="bg-white/[0.03] border-white/[0.1] text-white rounded-xl h-12 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner">
+                      <SelectTrigger className={selectTriggerClass}>
                         <SelectValue placeholder="選択してください" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#0a0a1e] border-white/[0.1] text-white">
+                      <SelectContent className="bg-slate-900 border border-slate-700 text-slate-50">
                         <SelectItem value="immediately">すぐに</SelectItem>
-                        <SelectItem value="within-1-month">1ヶ月以内</SelectItem>
-                        <SelectItem value="within-3-months">3ヶ月以内</SelectItem>
+                        <SelectItem value="within-1-month">
+                          1ヶ月以内
+                        </SelectItem>
+                        <SelectItem value="within-3-months">
+                          3ヶ月以内
+                        </SelectItem>
                         <SelectItem value="undecided">未定</SelectItem>
                       </SelectContent>
                     </Select>
@@ -669,7 +650,7 @@ export default function Home() {
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
                       }
-                      className="bg-white/[0.03] border-white/[0.1] text-white rounded-xl min-h-32 text-base sm:text-lg focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner"
+                      className={textareaClass}
                       placeholder="ご質問やご要望などがあればご記入ください"
                     />
                   </div>
@@ -688,7 +669,14 @@ export default function Home() {
         </section>
 
         <footer className="text-center text-gray-500 text-sm py-8 border-t border-white/[0.05]">
-          <p>© 2024 sociott. All rights reserved.</p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            © 2024 sociott. All rights reserved.
+          </motion.p>
         </footer>
       </div>
     </div>
