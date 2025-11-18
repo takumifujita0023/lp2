@@ -45,41 +45,38 @@ export default function Home() {
     document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  if (!formData.company || !formData.name || !formData.email) {
-    toast.error('必須項目を入力してください');
-    return;
-  }
-
-  setIsSubmitting(true);
-
-  try {
-    const response = await fetch('/api/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
-
-    if (response.ok) {
-      toast.success('送信が完了しました');
-      setFormData({
-        company: '',
-        name: '',
-        email: '',
-        purpose: '',
-        timeline: '',
-        message: '',
+    try {
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
-    } else {
-      toast.error('送信に失敗しました');
+
+      if (response.ok) {
+        toast.success('送信が完了しました！');
+
+        setFormData({
+          company: '',
+          name: '',
+          email: '',
+          purpose: '',
+          timeline: '',
+          message: '',
+        });
+      } else {
+        toast.error('送信に失敗しました…');
+      }
+    } catch (error) {
+      console.error('送信エラー:', error);
+      toast.error('送信に失敗しました…');
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (error) {
-    toast.error('送信に失敗しました');
-  } finally {
-    setIsSubmitting(false);
-  }
+  };
   return (
     <div className="min-h-screen text-white relative">
       {!prefersReducedMotion && <AnimatedBackground />}
