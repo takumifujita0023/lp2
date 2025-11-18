@@ -81,7 +81,6 @@ export default function Home() {
     setIsSubmitting(false);
   }
 };
-  };
 
   return (
     <div className="min-h-screen text-white relative">
