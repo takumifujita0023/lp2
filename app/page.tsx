@@ -608,4 +608,5 @@ export default function Home() {
           </motion.p>
         </footer>
       </div>
-   
+   );
+}
