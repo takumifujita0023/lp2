@@ -157,26 +157,27 @@ export default function Home() {
           </div>
 
           <div className="relative max-w-4xl mx-auto">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
               <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                {/* ★ SNSで / "伝わるカタチ"を 改行 */}
+                {/* SNSで 改行 ”伝わるカタチ”を */}
                 SNSで
                 <br />
                 &quot;伝わるカタチ&quot;を
               </span>
             </h1>
 
-            {/* ★ 集客・採用・ブランディング / に悩む企業へ 改行＋中央配置 */}
             <p className="text-xl sm:text-2xl text-slate-200 mb-4 text-center">
               集客・採用・ブランディング
               <br />
               に悩む企業へ
             </p>
 
-            <p className="text-base sm:text-lg text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed text-center">
               映像制作 × SNS運用代行
-              <br className="sm:hidden" />
-              企画〜撮影〜編集〜投稿〜分析までワンストップで全国対応
+              <br />
+              企画〜撮影〜編集〜投稿〜分析まで
+              <br />
+              ワンストップで全国対応
             </p>
 
             <PrimaryButton type="button" onClick={scrollToForm}>
@@ -671,7 +672,6 @@ export default function Home() {
         </section>
 
         <footer className="text-center text-slate-500 text-sm py-8 border-t border-slate-700/70">
-          {/* ★ クレジット 2025 に変更 */}
           <p>© 2025 sociott. All rights reserved.</p>
         </footer>
       </div>
