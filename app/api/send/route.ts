@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
+  // 必須の環境変数チェック
   if (
     !process.env.RESEND_API_KEY ||
     !process.env.FROM_EMAIL ||
@@ -20,10 +21,12 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+
   try {
     const body = await request.json();
     const { company, name, email, purpose, timeline, message } = body;
 
+    // バリデーション（会社名・名前・メールは必須）
     if (!company || !name || !email) {
       return NextResponse.json(
         { error: '必須項目を入力してください' },
@@ -51,7 +54,7 @@ ${timeline || '未選択'}
 
 【メッセージ】
 ${message || 'なし'}
-    `.trim();
+`.trim();
 
     const data = await resend.emails.send({
       from: process.env.FROM_EMAIL!,
