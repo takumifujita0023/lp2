@@ -5,26 +5,15 @@ import { Check, X, Circle, Triangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { toast } from 'sonner';
 
-// 背景アニメーション（入力の邪魔をしないよう pointer-events-none）
 import { AnimatedBackground } from '@/components/animated/background';
 import { Particles } from '@/components/animated/particles';
 import { GeometricPatterns } from '@/components/animated/geometric-patterns';
 import { FlowingLights } from '@/components/animated/flowing-lights';
 
 export default function Home() {
-  // フォームは「非制御」。選択系だけ state を持つ
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [purpose, setPurpose] = useState('');
-  const [timeline, setTimeline] = useState('');
 
   const scrollToForm = () => {
     document
@@ -41,8 +30,8 @@ export default function Home() {
     const company = (fd.get('company') || '').toString().trim();
     const name = (fd.get('name') || '').toString().trim();
     const email = (fd.get('email') || '').toString().trim();
-    const purposeValue = (fd.get('purpose') || '').toString();
-    const timelineValue = (fd.get('timeline') || '').toString();
+    const purpose = (fd.get('purpose') || '').toString();
+    const timeline = (fd.get('timeline') || '').toString();
     const message = (fd.get('message') || '').toString();
 
     if (!company || !name || !email) {
@@ -59,8 +48,8 @@ export default function Home() {
           company,
           name,
           email,
-          purpose: purposeValue,
-          timeline: timelineValue,
+          purpose,
+          timeline,
           message,
         }),
       });
@@ -68,8 +57,6 @@ export default function Home() {
       if (res.ok) {
         toast.success('送信が完了しました');
         form.reset();
-        setPurpose('');
-        setTimeline('');
       } else {
         toast.error('送信に失敗しました');
       }
@@ -80,16 +67,15 @@ export default function Home() {
     }
   };
 
-  // 入力系の見た目を統一
   const inputClass =
     'bg-slate-900/70 border border-slate-600 text-white rounded-xl h-12 text-base sm:text-lg ' +
     'px-3 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 ' +
     'placeholder:text-slate-500';
 
-  const selectTriggerClass =
+  const selectClass =
     'bg-slate-900/70 border border-slate-600 text-white rounded-xl h-12 text-base sm:text-lg ' +
-    'px-3 flex items-center justify-between focus:outline-none focus:border-indigo-400 ' +
-    'focus:ring-2 focus:ring-indigo-400/30';
+    'px-3 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 ' +
+    'w-full';
 
   const textareaClass =
     'bg-slate-900/70 border border-slate-600 text-white rounded-xl min-h-32 text-base sm:text-lg ' +
@@ -133,7 +119,8 @@ export default function Home() {
       className={
         'inline-flex items-center justify-center rounded-xl px-8 py-3 text-base sm:text-lg font-semibold ' +
         'bg-gradient-to-r from-indigo-500 to-cyan-400 text-white shadow-lg shadow-cyan-400/30 ' +
-        'hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed ' +
+        'hover:brightness-110 active:scale-[0.98] transition-all ' +
+        'disabled:opacity-60 disabled:cursor-not-allowed ' +
         (props.className ?? '')
       }
     >
@@ -143,7 +130,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white relative bg-[#020617]">
-      {/* 背景アニメーション（クリック不可） */}
+      {/* 背景アニメーション（クリック・入力の邪魔をしないよう pointer-events-none） */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <AnimatedBackground />
         <Particles />
@@ -151,7 +138,7 @@ export default function Home() {
         <FlowingLights />
       </div>
 
-      {/* コンテンツ本体 */}
+      {/* コンテンツ */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
         {/* HERO */}
         <section className="text-center mb-24 sm:mb-32 pt-8 sm:pt-12 relative">
@@ -519,27 +506,14 @@ export default function Home() {
                   >
                     目的
                   </Label>
-                  {/* Select は state + hidden input で FormData に流す */}
-                  <Select
-                    value={purpose}
-                    onValueChange={(value) => setPurpose(value)}
-                  >
-                    <SelectTrigger className={selectTriggerClass}>
-                      <SelectValue placeholder="選択してください" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border border-slate-600 text-white">
-                      <SelectItem value="customer-acquisition">
-                        集客
-                      </SelectItem>
-                      <SelectItem value="recruitment">採用</SelectItem>
-                      <SelectItem value="brand-strengthening">
-                        ブランド強化
-                      </SelectItem>
-                      <SelectItem value="awareness">認知</SelectItem>
-                      <SelectItem value="other">その他</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <input type="hidden" name="purpose" value={purpose} />
+                  <select id="purpose" name="purpose" className={selectClass}>
+                    <option value="">選択してください</option>
+                    <option value="customer-acquisition">集客</option>
+                    <option value="recruitment">採用</option>
+                    <option value="brand-strengthening">ブランド強化</option>
+                    <option value="awareness">認知</option>
+                    <option value="other">その他</option>
+                  </select>
                 </div>
 
                 <div>
@@ -549,25 +523,13 @@ export default function Home() {
                   >
                     開始時期
                   </Label>
-                  <Select
-                    value={timeline}
-                    onValueChange={(value) => setTimeline(value)}
-                  >
-                    <SelectTrigger className={selectTriggerClass}>
-                      <SelectValue placeholder="選択してください" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border border-slate-600 text-white">
-                      <SelectItem value="immediately">すぐに</SelectItem>
-                      <SelectItem value="within-1-month">
-                        1ヶ月以内
-                      </SelectItem>
-                      <SelectItem value="within-3-months">
-                        3ヶ月以内
-                      </SelectItem>
-                      <SelectItem value="undecided">未定</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <input type="hidden" name="timeline" value={timeline} />
+                  <select id="timeline" name="timeline" className={selectClass}>
+                    <option value="">選択してください</option>
+                    <option value="immediately">すぐに</option>
+                    <option value="within-1-month">1ヶ月以内</option>
+                    <option value="within-3-months">3ヶ月以内</option>
+                    <option value="undecided">未定</option>
+                  </select>
                 </div>
 
                 <div>
@@ -598,7 +560,7 @@ export default function Home() {
         </section>
 
         <footer className="text-center text-slate-500 text-sm py-8 border-t border-slate-700/70">
-          <p>© 2025 sociott. All rights reserved.</p>
+          <p>© 2024 sociott. All rights reserved.</p>
         </footer>
       </div>
     </div>
