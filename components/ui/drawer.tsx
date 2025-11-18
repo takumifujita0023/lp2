@@ -1,118 +1,152 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Drawer as DrawerPrimitive } from 'vaul';
+import * as React from "react";
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-import { cn } from '@/lib/utils';
+type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
-const Drawer = ({
-  shouldScaleBackground = true,
+type DrawerProps = {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
+};
+
+type DrawerContextType = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+
+const DrawerContext = React.createContext<DrawerContextType | null>(null);
+
+// ルート
+export function Drawer({ open: controlledOpen, onOpenChange, children }: DrawerProps) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const setOpen = (next: boolean) => {
+    if (!isControlled) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  };
+
+  return (
+    <DrawerContext.Provider value={{ open, setOpen }}>
+      {children}
+    </DrawerContext.Provider>
+  );
+}
+
+// トリガー（開くボタン）
+export function DrawerTrigger(
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>
+) {
+  const ctx = React.useContext(DrawerContext);
+  if (!ctx) throw new Error("DrawerTrigger must be used inside <Drawer />");
+
+  return (
+    <button
+      type="button"
+      onClick={() => ctx.setOpen(true)}
+      {...props}
+    />
+  );
+}
+
+// コンテンツ本体（右側から出てくるパネル）
+export function DrawerContent({
+  className,
+  children,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root
-    shouldScaleBackground={shouldScaleBackground}
-    {...props}
-  />
-);
-Drawer.displayName = 'Drawer';
+}: DivProps) {
+  const ctx = React.useContext(DrawerContext);
+  if (!ctx) throw new Error("DrawerContent must be used inside <Drawer />");
 
-const DrawerTrigger = DrawerPrimitive.Trigger;
+  if (!ctx.open) return null;
 
-const DrawerPortal = DrawerPrimitive.Portal;
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/40">
+      <div
+        className={cn(
+          "flex h-full w-full max-w-md flex-col bg-background p-6 shadow-xl",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
 
-const DrawerClose = DrawerPrimitive.Close;
+// ヘッダー
+export function DrawerHeader({ className, ...props }: DivProps) {
+  return (
+    <div
+      className={cn("mb-4 flex items-center gap-2", className)}
+      {...props}
+    />
+  );
+}
 
-const DrawerOverlay = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DrawerPrimitive.Overlay
-    ref={ref}
-    className={cn('fixed inset-0 z-50 bg-black/80', className)}
-    {...props}
-  />
-));
-DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
+// フッター（ボタン置き場）
+export function DrawerFooter({ className, ...props }: DivProps) {
+  return (
+    <div
+      className={cn("mt-auto flex gap-2", className)}
+      {...props}
+    />
+  );
+}
 
-const DrawerContent = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DrawerPortal>
-    <DrawerOverlay />
-    <DrawerPrimitive.Content
-      ref={ref}
+// タイトル
+export function DrawerTitle(
+  props: React.HTMLAttributes<HTMLHeadingElement> & { className?: string }
+) {
+  const { className, ...rest } = props;
+  return (
+    <h2
+      className={cn("text-lg font-semibold", className)}
+      {...rest}
+    />
+  );
+}
+
+// 説明文
+export function DrawerDescription(
+  props: React.HTMLAttributes<HTMLParagraphElement> & { className?: string }
+) {
+  const { className, ...rest } = props;
+  return (
+    <p
+      className={cn("text-sm text-muted-foreground", className)}
+      {...rest}
+    />
+  );
+}
+
+// 閉じるボタン
+export function DrawerClose(
+  props: React.ButtonHTMLAttributes<HTMLButtonElement> & { className?: string }
+) {
+  const ctx = React.useContext(DrawerContext);
+  if (!ctx) throw new Error("DrawerClose must be used inside <Drawer />");
+
+  const { className, children, ...rest } = props;
+
+  return (
+    <button
+      type="button"
+      onClick={() => ctx.setOpen(false)}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background',
+        "ml-auto inline-flex items-center rounded-md p-1 hover:bg-muted",
         className
       )}
-      {...props}
+      {...rest}
     >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
-      {children}
-    </DrawerPrimitive.Content>
-  </DrawerPortal>
-));
-DrawerContent.displayName = 'DrawerContent';
-
-const DrawerHeader = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn('grid gap-1.5 p-4 text-center sm:text-left', className)}
-    {...props}
-  />
-);
-DrawerHeader.displayName = 'DrawerHeader';
-
-const DrawerFooter = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn('mt-auto flex flex-col gap-2 p-4', className)}
-    {...props}
-  />
-);
-DrawerFooter.displayName = 'DrawerFooter';
-
-const DrawerTitle = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>
->(({ className, ...props }, ref) => (
-  <DrawerPrimitive.Title
-    ref={ref}
-    className={cn(
-      'text-lg font-semibold leading-none tracking-tight',
-      className
-    )}
-    {...props}
-  />
-));
-DrawerTitle.displayName = DrawerPrimitive.Title.displayName;
-
-const DrawerDescription = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Description>
->(({ className, ...props }, ref) => (
-  <DrawerPrimitive.Description
-    ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
-    {...props}
-  />
-));
-DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
-
-export {
-  Drawer,
-  DrawerPortal,
-  DrawerOverlay,
-  DrawerTrigger,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerFooter,
-  DrawerTitle,
-  DrawerDescription,
-};
+      {children ?? <X className="h-4 w-4" aria-hidden="true" />}
+      <span className="sr-only">Close</span>
+    </button>
+  );
+}
