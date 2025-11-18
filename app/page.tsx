@@ -5,34 +5,47 @@ import { Check, X, Circle, Triangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 
-// 背景アニメーション（入力を邪魔しないように pointer-events-none）
+// 背景アニメーション（入力の邪魔をしないよう pointer-events-none）
 import { AnimatedBackground } from '@/components/animated/background';
 import { Particles } from '@/components/animated/particles';
 import { GeometricPatterns } from '@/components/animated/geometric-patterns';
 import { FlowingLights } from '@/components/animated/flowing-lights';
 
 export default function Home() {
-  const [formData, setFormData] = useState({
-    company: '',
-    name: '',
-    email: '',
-    purpose: '',
-    timeline: '',
-    message: '',
-  });
+  // フォームは「非制御」。選択系だけ state を持つ
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [purpose, setPurpose] = useState('');
+  const [timeline, setTimeline] = useState('');
 
   const scrollToForm = () => {
-    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+    document
+      .getElementById('contact-form')
+      ?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.company || !formData.name || !formData.email) {
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+
+    const company = (fd.get('company') || '').toString().trim();
+    const name = (fd.get('name') || '').toString().trim();
+    const email = (fd.get('email') || '').toString().trim();
+    const purposeValue = (fd.get('purpose') || '').toString();
+    const timelineValue = (fd.get('timeline') || '').toString();
+    const message = (fd.get('message') || '').toString();
+
+    if (!company || !name || !email) {
       toast.error('必須項目を入力してください');
       return;
     }
@@ -42,19 +55,21 @@ export default function Home() {
       const res = await fetch('/api/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          company,
+          name,
+          email,
+          purpose: purposeValue,
+          timeline: timelineValue,
+          message,
+        }),
       });
 
       if (res.ok) {
         toast.success('送信が完了しました');
-        setFormData({
-          company: '',
-          name: '',
-          email: '',
-          purpose: '',
-          timeline: '',
-          message: '',
-        });
+        form.reset();
+        setPurpose('');
+        setTimeline('');
       } else {
         toast.error('送信に失敗しました');
       }
@@ -65,7 +80,7 @@ export default function Home() {
     }
   };
 
-  // 入力系の見た目を全部ここで統一（ダーク・見やすい・触りやすい）
+  // 入力系の見た目を統一
   const inputClass =
     'bg-slate-900/70 border border-slate-600 text-white rounded-xl h-12 text-base sm:text-lg ' +
     'px-3 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 ' +
@@ -73,8 +88,8 @@ export default function Home() {
 
   const selectTriggerClass =
     'bg-slate-900/70 border border-slate-600 text-white rounded-xl h-12 text-base sm:text-lg ' +
-    'px-3 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 ' +
-    'flex items-center justify-between';
+    'px-3 flex items-center justify-between focus:outline-none focus:border-indigo-400 ' +
+    'focus:ring-2 focus:ring-indigo-400/30';
 
   const textareaClass =
     'bg-slate-900/70 border border-slate-600 text-white rounded-xl min-h-32 text-base sm:text-lg ' +
@@ -82,7 +97,9 @@ export default function Home() {
     'placeholder:text-slate-500';
 
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-white tracking-wide">{children}</h2>
+    <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-white tracking-wide">
+      {children}
+    </h2>
   );
 
   const Card = ({
@@ -126,7 +143,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white relative bg-[#020617]">
-      {/* 背景アニメーション（クリックを邪魔しないように pointer-events-none） */}
+      {/* 背景アニメーション（クリック不可） */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <AnimatedBackground />
         <Particles />
@@ -142,7 +159,8 @@ export default function Home() {
             <div
               className="w-full h-full"
               style={{
-                background: 'radial-gradient(circle, rgba(99,102,241,0.6) 0%, transparent 70%)',
+                background:
+                  'radial-gradient(circle, rgba(99,102,241,0.6) 0%, transparent 70%)',
                 filter: 'blur(80px)',
               }}
             />
@@ -207,7 +225,10 @@ export default function Home() {
               '丸投げOK（企画〜撮影〜編集〜投稿〜分析）',
               '「なぜこの企画？」を言語化できる運用設計',
             ].map((item, index) => (
-              <Card key={index} className="p-6 sm:p-8 relative overflow-hidden">
+              <Card
+                key={index}
+                className="p-6 sm:p-8 relative overflow-hidden"
+              >
                 <div className="absolute top-4 right-4 text-5xl sm:text-6xl font-bold text-slate-600/40">
                   {String(index + 1).padStart(2, '0')}
                 </div>
@@ -215,7 +236,9 @@ export default function Home() {
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-400 flex items-center justify-center shadow-lg shadow-indigo-500/40">
                     <Check className="h-5 w-5" />
                   </div>
-                  <p className="text-slate-200 text-base sm:text-lg leading-relaxed">{item}</p>
+                  <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
+                    {item}
+                  </p>
                 </div>
               </Card>
             ))}
@@ -248,17 +271,23 @@ export default function Home() {
               <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
                 完全オーダーメイド
               </h3>
-              <p className="text-slate-200 text-lg sm:text-xl mb-8 font-medium">固定プランなし</p>
-              <p className="text-slate-100 text-lg sm:text-xl font-bold mb-6">組み合わせ自由</p>
+              <p className="text-slate-200 text-lg sm:text-xl mb-8 font-medium">
+                固定プランなし
+              </p>
+              <p className="text-slate-100 text-lg sm:text-xl font-bold mb-6">
+                組み合わせ自由
+              </p>
               <div className="flex flex-wrap gap-3">
-                {['企画', '台本', '撮影', '編集', '投稿代行', '分析', '内製化支援'].map((item) => (
-                  <span
-                    key={item}
-                    className="bg-slate-900/80 backdrop-blur-sm border border-slate-600 px-5 py-3 rounded-xl text-slate-100 text-base sm:text-lg font-medium"
-                  >
-                    {item}
-                  </span>
-                ))}
+                {['企画', '台本', '撮影', '編集', '投稿代行', '分析', '内製化支援'].map(
+                  (item) => (
+                    <span
+                      key={item}
+                      className="bg-slate-900/80 backdrop-blur-sm border border-slate-600 px-5 py-3 rounded-xl text-slate-100 text-base sm:text-lg font-medium"
+                    >
+                      {item}
+                    </span>
+                  )
+                )}
               </div>
             </Card>
           </div>
@@ -281,7 +310,9 @@ export default function Home() {
                 </h3>
                 <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
                   {item.result}
-                  <span className="font-bold text-xl sm:text-2xl text-white ml-1">{item.number}</span>
+                  <span className="font-bold text-xl sm:text-2xl text-white ml-1">
+                    {item.number}
+                  </span>
                 </p>
               </Card>
             ))}
@@ -325,7 +356,9 @@ export default function Home() {
                       key={index}
                       className="border-b border-slate-700/80 last:border-0 hover:bg-slate-800/60 transition-colors"
                     >
-                      <td className="p-4 sm:p-6 text-slate-200 text-sm sm:text-base">{row.item}</td>
+                      <td className="p-4 sm:p-6 text-slate-200 text-sm sm:text-base">
+                        {row.item}
+                      </td>
                       <td className="p-4 sm:p-6 text-center">
                         <div className="inline-flex items-center justify-center">
                           <div className="relative w-8 h-8">
@@ -358,13 +391,22 @@ export default function Home() {
                           </div>
                         )}
                         {row.them === 'good' && (
-                          <Circle className="h-8 w-8 text-slate-300 mx-auto" strokeWidth={2.5} />
+                          <Circle
+                            className="h-8 w-8 text-slate-300 mx-auto"
+                            strokeWidth={2.5}
+                          />
                         )}
                         {row.them === 'fair' && (
-                          <Triangle className="h-8 w-8 text-slate-300 mx-auto" strokeWidth={2.5} />
+                          <Triangle
+                            className="h-8 w-8 text-slate-300 mx-auto"
+                            strokeWidth={2.5}
+                          />
                         )}
                         {row.them === 'poor' && (
-                          <X className="h-8 w-8 text-slate-300 mx-auto" strokeWidth={2.5} />
+                          <X
+                            className="h-8 w-8 text-slate-300 mx-auto"
+                            strokeWidth={2.5}
+                          />
                         )}
                       </td>
                     </tr>
@@ -399,20 +441,25 @@ export default function Home() {
             <div
               className="absolute -top-20 -left-20 w-64 h-64 rounded-full opacity-10 pointer-events-none"
               style={{
-                background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)',
+                background:
+                  'radial-gradient(circle, #6366f1 0%, transparent 70%)',
                 filter: 'blur(60px)',
               }}
             />
             <div
               className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full opacity-10 pointer-events-none"
               style={{
-                background: 'radial-gradient(circle, #22d3ee 0%, transparent 70%)',
+                background:
+                  'radial-gradient(circle, #22d3ee 0%, transparent 70%)',
                 filter: 'blur(60px)',
               }}
             />
 
             <Card className="max-w-3xl mx-auto relative z-10 p-6 sm:p-10 lg:p-12">
-              <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6 sm:space-y-8"
+              >
                 <div>
                   <Label
                     htmlFor="company"
@@ -422,9 +469,8 @@ export default function Home() {
                   </Label>
                   <Input
                     id="company"
+                    name="company"
                     autoComplete="organization"
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     required
                     className={inputClass}
                     placeholder="株式会社〇〇"
@@ -432,14 +478,16 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <Label htmlFor="name" className="text-slate-200 mb-2 block text-base sm:text-lg">
+                  <Label
+                    htmlFor="name"
+                    className="text-slate-200 mb-2 block text-base sm:text-lg"
+                  >
                     担当者名 <span className="text-indigo-400">*</span>
                   </Label>
                   <Input
                     id="name"
+                    name="name"
                     autoComplete="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                     className={inputClass}
                     placeholder="山田太郎"
@@ -455,10 +503,9 @@ export default function Home() {
                   </Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     autoComplete="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                     className={inputClass}
                     placeholder="example@company.com"
@@ -472,21 +519,27 @@ export default function Home() {
                   >
                     目的
                   </Label>
+                  {/* Select は state + hidden input で FormData に流す */}
                   <Select
-                    value={formData.purpose}
-                    onValueChange={(value) => setFormData({ ...formData, purpose: value })}
+                    value={purpose}
+                    onValueChange={(value) => setPurpose(value)}
                   >
                     <SelectTrigger className={selectTriggerClass}>
                       <SelectValue placeholder="選択してください" />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-900 border border-slate-600 text-white">
-                      <SelectItem value="customer-acquisition">集客</SelectItem>
+                      <SelectItem value="customer-acquisition">
+                        集客
+                      </SelectItem>
                       <SelectItem value="recruitment">採用</SelectItem>
-                      <SelectItem value="brand-strengthening">ブランド強化</SelectItem>
+                      <SelectItem value="brand-strengthening">
+                        ブランド強化
+                      </SelectItem>
                       <SelectItem value="awareness">認知</SelectItem>
                       <SelectItem value="other">その他</SelectItem>
                     </SelectContent>
                   </Select>
+                  <input type="hidden" name="purpose" value={purpose} />
                 </div>
 
                 <div>
@@ -497,19 +550,24 @@ export default function Home() {
                     開始時期
                   </Label>
                   <Select
-                    value={formData.timeline}
-                    onValueChange={(value) => setFormData({ ...formData, timeline: value })}
+                    value={timeline}
+                    onValueChange={(value) => setTimeline(value)}
                   >
                     <SelectTrigger className={selectTriggerClass}>
                       <SelectValue placeholder="選択してください" />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-900 border border-slate-600 text-white">
                       <SelectItem value="immediately">すぐに</SelectItem>
-                      <SelectItem value="within-1-month">1ヶ月以内</SelectItem>
-                      <SelectItem value="within-3-months">3ヶ月以内</SelectItem>
+                      <SelectItem value="within-1-month">
+                        1ヶ月以内
+                      </SelectItem>
+                      <SelectItem value="within-3-months">
+                        3ヶ月以内
+                      </SelectItem>
                       <SelectItem value="undecided">未定</SelectItem>
                     </SelectContent>
                   </Select>
+                  <input type="hidden" name="timeline" value={timeline} />
                 </div>
 
                 <div>
@@ -521,14 +579,17 @@ export default function Home() {
                   </Label>
                   <Textarea
                     id="message"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    name="message"
                     className={textareaClass}
                     placeholder="ご質問やご要望などがあればご記入ください"
                   />
                 </div>
 
-                <PrimaryButton type="submit" disabled={isSubmitting} className="w-full">
+                <PrimaryButton
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full"
+                >
                   {isSubmitting ? '送信中...' : '送信する'}
                 </PrimaryButton>
               </form>
@@ -537,7 +598,7 @@ export default function Home() {
         </section>
 
         <footer className="text-center text-slate-500 text-sm py-8 border-t border-slate-700/70">
-          <p>© 2024 sociott. All rights reserved.</p>
+          <p>© 2025 sociott. All rights reserved.</p>
         </footer>
       </div>
     </div>
