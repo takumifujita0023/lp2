@@ -82,7 +82,6 @@ export default function Home() {
     'px-3 py-2 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 ' +
     'placeholder:text-slate-500';
 
-  // ★ここだけ変更：常に中央揃え（sm:text-left を削除）
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-white tracking-wide text-center">
       {children}
@@ -160,12 +159,18 @@ export default function Home() {
           <div className="relative max-w-4xl mx-auto">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
               <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                SNSで&quot;伝わるカタチ&quot;を
+                {/* ★ SNSで / "伝わるカタチ"を 改行 */}
+                SNSで
+                <br />
+                &quot;伝わるカタチ&quot;を
               </span>
             </h1>
 
-            <p className="text-xl sm:text-2xl text-slate-200 mb-4">
-              集客・採用・ブランディングに悩む企業へ
+            {/* ★ 集客・採用・ブランディング / に悩む企業へ 改行＋中央配置 */}
+            <p className="text-xl sm:text-2xl text-slate-200 mb-4 text-center">
+              集客・採用・ブランディング
+              <br />
+              に悩む企業へ
             </p>
 
             <p className="text-base sm:text-lg text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed">
@@ -666,7 +671,8 @@ export default function Home() {
         </section>
 
         <footer className="text-center text-slate-500 text-sm py-8 border-t border-slate-700/70">
-          <p>© 2024 sociott. All rights reserved.</p>
+          {/* ★ クレジット 2025 に変更 */}
+          <p>© 2025 sociott. All rights reserved.</p>
         </footer>
       </div>
     </div>
