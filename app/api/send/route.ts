@@ -1,15 +1,11 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || '');
 
 export async function POST(request: Request) {
   // 必須の環境変数チェック
-  if (
-    !process.env.RESEND_API_KEY ||
-    !process.env.FROM_EMAIL ||
-    !process.env.TO_EMAIL
-  ) {
+  if (!process.env.RESEND_API_KEY || !process.env.FROM_EMAIL || !process.env.TO_EMAIL) {
     console.error('Env missing', {
       RESEND_API_KEY: !!process.env.RESEND_API_KEY,
       FROM_EMAIL: !!process.env.FROM_EMAIL,
@@ -26,7 +22,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { company, name, email, purpose, timeline, message } = body;
 
-    // バリデーション（会社名・名前・メールは必須）
+    // フロントのバリデーションとは別にサーバ側でも必須チェック
     if (!company || !name || !email) {
       return NextResponse.json(
         { error: '必須項目を入力してください' },
@@ -35,7 +31,7 @@ export async function POST(request: Request) {
     }
 
     const emailContent = `
-新規問い合わせがありました
+新規問い合わせがありました。
 
 【会社名】
 ${company}
@@ -53,7 +49,7 @@ ${purpose || '未選択'}
 ${timeline || '未選択'}
 
 【メッセージ】
-${message || 'なし'}
+${(message || 'なし').trim()}
 `.trim();
 
     const data = await resend.emails.send({
@@ -67,7 +63,7 @@ ${message || 'なし'}
   } catch (error) {
     console.error('Email send error:', error);
     return NextResponse.json(
-      { error: '送信に失敗しました' },
+      { error: '送信中にエラーが発生しました' },
       { status: 500 }
     );
   }
