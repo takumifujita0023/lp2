@@ -130,7 +130,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white relative bg-[#020617]">
-      {/* 背景アニメーション（クリック・入力の邪魔をしないよう pointer-events-none） */}
+      {/* 背景アニメーション */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <AnimatedBackground />
         <Particles />
@@ -308,99 +308,182 @@ export default function Home() {
 
         <Divider />
 
-        {/* 他社比較 */}
+        {/* 他社比較（スマホ最適化版） */}
         <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
           <SectionTitle>他社比較</SectionTitle>
-          <div className="overflow-x-auto">
-            <Card className="min-w-[600px] p-1">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-600/80">
-                    <th className="text-left p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
-                      項目
-                    </th>
-                    <th className="text-center p-4 sm:p-6 font-bold text-base sm:text-lg">
-                      <span className="bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
-                        sociott
-                      </span>
-                    </th>
-                    <th className="text-center p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
-                      他社
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { item: 'スピード', us: 'best', them: 'good' },
-                    { item: 'SNS特化', us: 'best', them: 'fair' },
-                    { item: '品質', us: 'best', them: 'best' },
-                    { item: 'コスパ', us: 'best', them: 'fair' },
-                    { item: 'ワンストップ', us: 'best', them: 'poor' },
-                    { item: '内製化支援', us: 'best', them: 'poor' },
-                    { item: '全国対応', us: 'best', them: 'fair' },
-                  ].map((row, index) => (
-                    <tr
-                      key={index}
-                      className="border-b border-slate-700/80 last:border-0 hover:bg-slate-800/60 transition-colors"
-                    >
-                      <td className="p-4 sm:p-6 text-slate-200 text-sm sm:text-base">
-                        {row.item}
-                      </td>
-                      <td className="p-4 sm:p-6 text-center">
+
+          {/*
+            スマホ：カード縦並び
+            md以上：テーブル表示
+          */}
+          <div className="space-y-6">
+            {/* モバイル表示用カード */}
+            <div className="grid gap-4 md:hidden">
+              {[
+                { item: 'スピード', us: 'best', them: 'good' },
+                { item: 'SNS特化', us: 'best', them: 'fair' },
+                { item: '品質', us: 'best', them: 'best' },
+                { item: 'コスパ', us: 'best', them: 'fair' },
+                { item: 'ワンストップ', us: 'best', them: 'poor' },
+                { item: '内製化支援', us: 'best', them: 'poor' },
+                { item: '全国対応', us: 'best', them: 'fair' },
+              ].map((row, index) => (
+                <Card key={index} className="p-4 flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-200 font-semibold">
+                      {row.item}
+                    </span>
+                    <span className="text-xs text-slate-400">比較</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-300">sociott</span>
+                      <div className="inline-flex items-center justify-center">
+                        <div className="relative w-7 h-7">
+                          <Circle
+                            className="absolute inset-0 h-7 w-7 text-indigo-400 fill-none"
+                            strokeWidth={2.5}
+                          />
+                          <Circle
+                            className="absolute h-4 w-4 text-indigo-400 fill-none"
+                            strokeWidth={2.5}
+                            style={{ top: '5px', left: '5px' }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-300">他社</span>
+                      {row.them === 'best' && (
                         <div className="inline-flex items-center justify-center">
-                          <div className="relative w-8 h-8">
+                          <div className="relative w-7 h-7">
                             <Circle
-                              className="absolute inset-0 h-8 w-8 text-indigo-400 fill-none"
+                              className="absolute inset-0 h-7 w-7 text-slate-300 fill-none"
                               strokeWidth={2.5}
                             />
                             <Circle
-                              className="absolute h-5 w-5 text-indigo-400 fill-none"
+                              className="absolute h-4 w-4 text-slate-300 fill-none"
                               strokeWidth={2.5}
-                              style={{ top: '6px', left: '6px' }}
+                              style={{ top: '5px', left: '5px' }}
                             />
                           </div>
                         </div>
-                      </td>
-                      <td className="p-4 sm:p-6 text-center">
-                        {row.them === 'best' && (
-                          <div className="inline-flex items-center justify-center">
-                            <div className="relative w-8 h-8">
-                              <Circle
-                                className="absolute inset-0 h-8 w-8 text-slate-300 fill-none"
-                                strokeWidth={2.5}
-                              />
-                              <Circle
-                                className="absolute h-5 w-5 text-slate-300 fill-none"
-                                strokeWidth={2.5}
-                                style={{ top: '6px', left: '6px' }}
-                              />
+                      )}
+                      {row.them === 'good' && (
+                        <Circle
+                          className="h-7 w-7 text-slate-300"
+                          strokeWidth={2.5}
+                        />
+                      )}
+                      {row.them === 'fair' && (
+                        <Triangle
+                          className="h-7 w-7 text-slate-300"
+                          strokeWidth={2.5}
+                        />
+                      )}
+                      {row.them === 'poor' && (
+                        <X className="h-7 w-7 text-slate-300" strokeWidth={2.5} />
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* PC / タブレット用テーブル */}
+            <div className="hidden md:block">
+              <div className="overflow-x-auto">
+                <Card className="min-w-[600px] p-1">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-slate-600/80">
+                        <th className="text-left p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
+                          項目
+                        </th>
+                        <th className="text-center p-4 sm:p-6 font-bold text-base sm:text-lg">
+                          <span className="bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
+                            sociott
+                          </span>
+                        </th>
+                        <th className="text-center p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
+                          他社
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { item: 'スピード', us: 'best', them: 'good' },
+                        { item: 'SNS特化', us: 'best', them: 'fair' },
+                        { item: '品質', us: 'best', them: 'best' },
+                        { item: 'コスパ', us: 'best', them: 'fair' },
+                        { item: 'ワンストップ', us: 'best', them: 'poor' },
+                        { item: '内製化支援', us: 'best', them: 'poor' },
+                        { item: '全国対応', us: 'best', them: 'fair' },
+                      ].map((row, index) => (
+                        <tr
+                          key={index}
+                          className="border-b border-slate-700/80 last:border-0 hover:bg-slate-800/60 transition-colors"
+                        >
+                          <td className="p-4 sm:p-6 text-slate-200 text-sm sm:text-base">
+                            {row.item}
+                          </td>
+                          <td className="p-4 sm:p-6 text-center">
+                            <div className="inline-flex items-center justify-center">
+                              <div className="relative w-8 h-8">
+                                <Circle
+                                  className="absolute inset-0 h-8 w-8 text-indigo-400 fill-none"
+                                  strokeWidth={2.5}
+                                />
+                                <Circle
+                                  className="absolute h-5 w-5 text-indigo-400 fill-none"
+                                  strokeWidth={2.5}
+                                  style={{ top: '6px', left: '6px' }}
+                                />
+                              </div>
                             </div>
-                          </div>
-                        )}
-                        {row.them === 'good' && (
-                          <Circle
-                            className="h-8 w-8 text-slate-300 mx-auto"
-                            strokeWidth={2.5}
-                          />
-                        )}
-                        {row.them === 'fair' && (
-                          <Triangle
-                            className="h-8 w-8 text-slate-300 mx-auto"
-                            strokeWidth={2.5}
-                          />
-                        )}
-                        {row.them === 'poor' && (
-                          <X
-                            className="h-8 w-8 text-slate-300 mx-auto"
-                            strokeWidth={2.5}
-                          />
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Card>
+                          </td>
+                          <td className="p-4 sm:p-6 text-center">
+                            {row.them === 'best' && (
+                              <div className="inline-flex items-center justify-center">
+                                <div className="relative w-8 h-8">
+                                  <Circle
+                                    className="absolute inset-0 h-8 w-8 text-slate-300 fill-none"
+                                    strokeWidth={2.5}
+                                  />
+                                  <Circle
+                                    className="absolute h-5 w-5 text-slate-300 fill-none"
+                                    strokeWidth={2.5}
+                                    style={{ top: '6px', left: '6px' }}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            {row.them === 'good' && (
+                              <Circle
+                                className="h-8 w-8 text-slate-300 mx-auto"
+                                strokeWidth={2.5}
+                              />
+                            )}
+                            {row.them === 'fair' && (
+                              <Triangle
+                                className="h-8 w-8 text-slate-300 mx-auto"
+                                strokeWidth={2.5}
+                              />
+                            )}
+                            {row.them === 'poor' && (
+                              <X
+                                className="h-8 w-8 text-slate-300 mx-auto"
+                                strokeWidth={2.5}
+                              />
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Card>
+              </div>
+            </div>
           </div>
         </section>
 
