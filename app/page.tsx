@@ -83,7 +83,7 @@ export default function Home() {
     'placeholder:text-slate-500';
 
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-white tracking-wide">
+    <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-white tracking-wide text-center sm:text-left">
       {children}
     </h2>
   );
@@ -130,8 +130,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white relative bg-[#020617]">
-      {/* 背景アニメーション */}
-      <div className="pointer-events-none fixed inset-0 -z-10">
+      {/* モバイル：静的背景（軽くする） */}
+      <div className="pointer-events-none fixed inset-0 -z-10 sm:hidden bg-gradient-to-b from-slate-900 via-slate-950 to-black" />
+
+      {/* PC / タブレット：アニメーション背景 */}
+      <div className="pointer-events-none fixed inset-0 -z-10 hidden sm:block">
         <AnimatedBackground />
         <Particles />
         <GeometricPatterns />
@@ -153,7 +156,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="relative">
+          <div className="relative max-w-4xl mx-auto">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
               <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
                 SNSで&quot;伝わるカタチ&quot;を
@@ -179,81 +182,89 @@ export default function Home() {
         <Divider />
 
         {/* お悩み */}
-        <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
-          <SectionTitle>こんなお悩みありませんか？</SectionTitle>
-          <div className="grid gap-4 sm:gap-6 max-w-3xl mx-auto">
-            {[
-              'SNSで本当に集客・採用できるの？',
-              '投稿しても伸びない理由がわからない',
-              'ショート動画を作っても問い合わせが増えない',
-              '制作会社は遅い・高い・SNS向きじゃない',
-              '他社は「なぜこの企画なのか」を説明してくれない',
-              '社内にSNS担当者がいない／時間不足・スキル不足',
-              '何を投稿すべきか迷う',
-            ].map((item, index) => (
-              <Card key={index} className="p-5 sm:p-6">
-                <p className="text-slate-200 text-base sm:text-lg">{item}</p>
-              </Card>
-            ))}
+        <section className="mb-24 sm:mb-32">
+          <div className="max-w-3xl mx-auto">
+            <SectionTitle>こんなお悩みありませんか？</SectionTitle>
+            <div className="grid gap-4 sm:gap-6">
+              {[
+                'SNSで本当に集客・採用できるの？',
+                '投稿しても伸びない理由がわからない',
+                'ショート動画を作っても問い合わせが増えない',
+                '制作会社は遅い・高い・SNS向きじゃない',
+                '他社は「なぜこの企画なのか」を説明してくれない',
+                '社内にSNS担当者がいない／時間不足・スキル不足',
+                '何を投稿すべきか迷う',
+              ].map((item, index) => (
+                <Card key={index} className="p-5 sm:p-6">
+                  <p className="text-slate-200 text-base sm:text-lg">
+                    {item}
+                  </p>
+                </Card>
+              ))}
+            </div>
           </div>
         </section>
 
         <Divider />
 
         {/* 強み */}
-        <section className="mb-24 sm:mb-32 mr-0 sm:mr-8">
-          <SectionTitle>私たちの強み</SectionTitle>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              'スムーズでストレスのない制作進行',
-              'SNS特化クリエイター多数在籍',
-              '高品質 × 低価格（制作会社の1/2〜1/3）',
-              '全国対応',
-              '丸投げOK（企画〜撮影〜編集〜投稿〜分析）',
-              '「なぜこの企画？」を言語化できる運用設計',
-            ].map((item, index) => (
-              <Card
-                key={index}
-                className="p-6 sm:p-8 relative overflow-hidden"
-              >
-                <div className="absolute top-4 right-4 text-5xl sm:text-6xl font-bold text-slate-600/40">
-                  {String(index + 1).padStart(2, '0')}
-                </div>
-                <div className="flex items-start gap-4 relative">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-400 flex items-center justify-center shadow-lg shadow-indigo-500/40">
-                    <Check className="h-5 w-5" />
+        <section className="mb-24 sm:mb-32">
+          <div className="max-w-5xl mx-auto">
+            <SectionTitle>私たちの強み</SectionTitle>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {[
+                'スムーズでストレスのない制作進行',
+                'SNS特化クリエイター多数在籍',
+                '高品質 × 低価格（制作会社の1/2〜1/3）',
+                '全国対応',
+                '丸投げOK（企画〜撮影〜編集〜投稿〜分析）',
+                '「なぜこの企画？」を言語化できる運用設計',
+              ].map((item, index) => (
+                <Card
+                  key={index}
+                  className="p-6 sm:p-8 relative overflow-hidden"
+                >
+                  <div className="absolute top-4 right-4 text-5xl sm:text-6xl font-bold text-slate-600/40">
+                    {String(index + 1).padStart(2, '0')}
                   </div>
-                  <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
-                    {item}
-                  </p>
-                </div>
-              </Card>
-            ))}
+                  <div className="flex items-start gap-4 relative">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-400 flex items-center justify-center shadow-lg shadow-indigo-500/40">
+                      <Check className="h-5 w-5" />
+                    </div>
+                    <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
+                      {item}
+                    </p>
+                  </div>
+                </Card>
+              ))}
+            </div>
           </div>
         </section>
 
         <Divider />
 
         {/* 内製化 */}
-        <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
-          <SectionTitle>内製化支援</SectionTitle>
-          <Card className="max-w-4xl mx-auto p-8 sm:p-12">
-            <h3 className="text-xl sm:text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
-              SNS運用の「内製化」まで伴走可能
-            </h3>
-            <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
-              企画思考・台本構成・撮影方法・編集テンプレ・投稿ルール・分析方法など、
-              御社のチームがSNS運用を自走できるまで徹底サポートいたします。
-            </p>
-          </Card>
+        <section className="mb-24 sm:mb-32">
+          <div className="max-w-4xl mx-auto">
+            <SectionTitle>内製化支援</SectionTitle>
+            <Card className="p-8 sm:p-12">
+              <h3 className="text-xl sm:text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
+                SNS運用の「内製化」まで伴走可能
+              </h3>
+              <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
+                企画思考・台本構成・撮影方法・編集テンプレ・投稿ルール・分析方法など、
+                御社のチームがSNS運用を自走できるまで徹底サポートいたします。
+              </p>
+            </Card>
+          </div>
         </section>
 
         <Divider />
 
         {/* 提供スタイル */}
-        <section className="mb-24 sm:mb-32 mr-0 sm:mr-8">
-          <SectionTitle>提供スタイル</SectionTitle>
+        <section className="mb-24 sm:mb-32">
           <div className="max-w-4xl mx-auto">
+            <SectionTitle>提供スタイル</SectionTitle>
             <Card className="p-8 sm:p-10">
               <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
                 完全オーダーメイド
@@ -284,204 +295,207 @@ export default function Home() {
 
         {/* 実績 */}
         <section className="mb-24 sm:mb-32">
-          <SectionTitle>実績</SectionTitle>
-          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              { title: '採用支援', result: '半年で', number: '12名採用成功' },
-              { title: '売上改善', result: '動画導線で', number: '150%アップ' },
-              { title: 'インフルエンサー支援', result: 'TikTok ', number: '20,000人達成' },
-            ].map((item, index) => (
-              <Card key={index} className="p-6 sm:p-8 text-center">
-                <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent mb-4">
-                  {item.title}
-                </h3>
-                <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
-                  {item.result}
-                  <span className="font-bold text-xl sm:text-2xl text-white ml-1">
-                    {item.number}
-                  </span>
-                </p>
-              </Card>
-            ))}
+          <div className="max-w-5xl mx-auto">
+            <SectionTitle>実績</SectionTitle>
+            <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
+              {[
+                { title: '採用支援', result: '半年で', number: '12名採用成功' },
+                { title: '売上改善', result: '動画導線で', number: '150%アップ' },
+                { title: 'インフルエンサー支援', result: 'TikTok ', number: '20,000人達成' },
+              ].map((item, index) => (
+                <Card key={index} className="p-6 sm:p-8 text-center">
+                  <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent mb-4">
+                    {item.title}
+                  </h3>
+                  <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
+                    {item.result}
+                    <span className="font-bold text-xl sm:text-2xl text-white ml-1">
+                      {item.number}
+                    </span>
+                  </p>
+                </Card>
+              ))}
+            </div>
           </div>
         </section>
 
         <Divider />
 
-        {/* 他社比較（スマホ最適化版） */}
-        <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
-          <SectionTitle>他社比較</SectionTitle>
+        {/* 他社比較（スマホ最適化版 + 中央配置） */}
+        <section className="mb-24 sm:mb-32">
+          <div className="max-w-5xl mx-auto">
+            <SectionTitle>他社比較</SectionTitle>
 
-          {/*
-            スマホ：カード縦並び
-            md以上：テーブル表示
-          */}
-          <div className="space-y-6">
-            {/* モバイル表示用カード */}
-            <div className="grid gap-4 md:hidden">
-              {[
-                { item: 'スピード', us: 'best', them: 'good' },
-                { item: 'SNS特化', us: 'best', them: 'fair' },
-                { item: '品質', us: 'best', them: 'best' },
-                { item: 'コスパ', us: 'best', them: 'fair' },
-                { item: 'ワンストップ', us: 'best', them: 'poor' },
-                { item: '内製化支援', us: 'best', them: 'poor' },
-                { item: '全国対応', us: 'best', them: 'fair' },
-              ].map((row, index) => (
-                <Card key={index} className="p-4 flex flex-col gap-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-200 font-semibold">
-                      {row.item}
-                    </span>
-                    <span className="text-xs text-slate-400">比較</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="text-slate-300">sociott</span>
-                      <div className="inline-flex items-center justify-center">
-                        <div className="relative w-7 h-7">
-                          <Circle
-                            className="absolute inset-0 h-7 w-7 text-indigo-400 fill-none"
-                            strokeWidth={2.5}
-                          />
-                          <Circle
-                            className="absolute h-4 w-4 text-indigo-400 fill-none"
-                            strokeWidth={2.5}
-                            style={{ top: '5px', left: '5px' }}
-                          />
-                        </div>
-                      </div>
+            <div className="space-y-6">
+              {/* モバイル表示用カード */}
+              <div className="grid gap-4 md:hidden">
+                {[
+                  { item: 'スピード', us: 'best', them: 'good' },
+                  { item: 'SNS特化', us: 'best', them: 'fair' },
+                  { item: '品質', us: 'best', them: 'best' },
+                  { item: 'コスパ', us: 'best', them: 'fair' },
+                  { item: 'ワンストップ', us: 'best', them: 'poor' },
+                  { item: '内製化支援', us: 'best', them: 'poor' },
+                  { item: '全国対応', us: 'best', them: 'fair' },
+                ].map((row, index) => (
+                  <Card key={index} className="p-4 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-200 font-semibold">
+                        {row.item}
+                      </span>
+                      <span className="text-xs text-slate-400">比較</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-slate-300">他社</span>
-                      {row.them === 'best' && (
+                    <div className="flex justify-between items-center text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-300">sociott</span>
                         <div className="inline-flex items-center justify-center">
                           <div className="relative w-7 h-7">
                             <Circle
-                              className="absolute inset-0 h-7 w-7 text-slate-300 fill-none"
+                              className="absolute inset-0 h-7 w-7 text-indigo-400 fill-none"
                               strokeWidth={2.5}
                             />
                             <Circle
-                              className="absolute h-4 w-4 text-slate-300 fill-none"
+                              className="absolute h-4 w-4 text-indigo-400 fill-none"
                               strokeWidth={2.5}
                               style={{ top: '5px', left: '5px' }}
                             />
                           </div>
                         </div>
-                      )}
-                      {row.them === 'good' && (
-                        <Circle
-                          className="h-7 w-7 text-slate-300"
-                          strokeWidth={2.5}
-                        />
-                      )}
-                      {row.them === 'fair' && (
-                        <Triangle
-                          className="h-7 w-7 text-slate-300"
-                          strokeWidth={2.5}
-                        />
-                      )}
-                      {row.them === 'poor' && (
-                        <X className="h-7 w-7 text-slate-300" strokeWidth={2.5} />
-                      )}
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-
-            {/* PC / タブレット用テーブル */}
-            <div className="hidden md:block">
-              <div className="overflow-x-auto">
-                <Card className="min-w-[600px] p-1">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-slate-600/80">
-                        <th className="text-left p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
-                          項目
-                        </th>
-                        <th className="text-center p-4 sm:p-6 font-bold text-base sm:text-lg">
-                          <span className="bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
-                            sociott
-                          </span>
-                        </th>
-                        <th className="text-center p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
-                          他社
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        { item: 'スピード', us: 'best', them: 'good' },
-                        { item: 'SNS特化', us: 'best', them: 'fair' },
-                        { item: '品質', us: 'best', them: 'best' },
-                        { item: 'コスパ', us: 'best', them: 'fair' },
-                        { item: 'ワンストップ', us: 'best', them: 'poor' },
-                        { item: '内製化支援', us: 'best', them: 'poor' },
-                        { item: '全国対応', us: 'best', them: 'fair' },
-                      ].map((row, index) => (
-                        <tr
-                          key={index}
-                          className="border-b border-slate-700/80 last:border-0 hover:bg-slate-800/60 transition-colors"
-                        >
-                          <td className="p-4 sm:p-6 text-slate-200 text-sm sm:text-base">
-                            {row.item}
-                          </td>
-                          <td className="p-4 sm:p-6 text-center">
-                            <div className="inline-flex items-center justify-center">
-                              <div className="relative w-8 h-8">
-                                <Circle
-                                  className="absolute inset-0 h-8 w-8 text-indigo-400 fill-none"
-                                  strokeWidth={2.5}
-                                />
-                                <Circle
-                                  className="absolute h-5 w-5 text-indigo-400 fill-none"
-                                  strokeWidth={2.5}
-                                  style={{ top: '6px', left: '6px' }}
-                                />
-                              </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-300">他社</span>
+                        {row.them === 'best' && (
+                          <div className="inline-flex items-center justify-center">
+                            <div className="relative w-7 h-7">
+                              <Circle
+                                className="absolute inset-0 h-7 w-7 text-slate-300 fill-none"
+                                strokeWidth={2.5}
+                              />
+                              <Circle
+                                className="absolute h-4 w-4 text-slate-300 fill-none"
+                                strokeWidth={2.5}
+                                style={{ top: '5px', left: '5px' }}
+                              />
                             </div>
-                          </td>
-                          <td className="p-4 sm:p-6 text-center">
-                            {row.them === 'best' && (
+                          </div>
+                        )}
+                        {row.them === 'good' && (
+                          <Circle
+                            className="h-7 w-7 text-slate-300"
+                            strokeWidth={2.5}
+                          />
+                        )}
+                        {row.them === 'fair' && (
+                          <Triangle
+                            className="h-7 w-7 text-slate-300"
+                            strokeWidth={2.5}
+                          />
+                        )}
+                        {row.them === 'poor' && (
+                          <X
+                            className="h-7 w-7 text-slate-300"
+                            strokeWidth={2.5}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              {/* PC / タブレット用テーブル */}
+              <div className="hidden md:block">
+                <div className="overflow-x-auto">
+                  <Card className="min-w-[600px] p-1">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-slate-600/80">
+                          <th className="text-left p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
+                            項目
+                          </th>
+                          <th className="text-center p-4 sm:p-6 font-bold text-base sm:text-lg">
+                            <span className="bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
+                              sociott
+                            </span>
+                          </th>
+                          <th className="text-center p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
+                            他社
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { item: 'スピード', us: 'best', them: 'good' },
+                          { item: 'SNS特化', us: 'best', them: 'fair' },
+                          { item: '品質', us: 'best', them: 'best' },
+                          { item: 'コスパ', us: 'best', them: 'fair' },
+                          { item: 'ワンストップ', us: 'best', them: 'poor' },
+                          { item: '内製化支援', us: 'best', them: 'poor' },
+                          { item: '全国対応', us: 'best', them: 'fair' },
+                        ].map((row, index) => (
+                          <tr
+                            key={index}
+                            className="border-b border-slate-700/80 last:border-0 hover:bg-slate-800/60 transition-colors"
+                          >
+                            <td className="p-4 sm:p-6 text-slate-200 text-sm sm:text-base">
+                              {row.item}
+                            </td>
+                            <td className="p-4 sm:p-6 text-center">
                               <div className="inline-flex items-center justify-center">
                                 <div className="relative w-8 h-8">
                                   <Circle
-                                    className="absolute inset-0 h-8 w-8 text-slate-300 fill-none"
+                                    className="absolute inset-0 h-8 w-8 text-indigo-400 fill-none"
                                     strokeWidth={2.5}
                                   />
                                   <Circle
-                                    className="absolute h-5 w-5 text-slate-300 fill-none"
+                                    className="absolute h-5 w-5 text-indigo-400 fill-none"
                                     strokeWidth={2.5}
                                     style={{ top: '6px', left: '6px' }}
                                   />
                                 </div>
                               </div>
-                            )}
-                            {row.them === 'good' && (
-                              <Circle
-                                className="h-8 w-8 text-slate-300 mx-auto"
-                                strokeWidth={2.5}
-                              />
-                            )}
-                            {row.them === 'fair' && (
-                              <Triangle
-                                className="h-8 w-8 text-slate-300 mx-auto"
-                                strokeWidth={2.5}
-                              />
-                            )}
-                            {row.them === 'poor' && (
-                              <X
-                                className="h-8 w-8 text-slate-300 mx-auto"
-                                strokeWidth={2.5}
-                              />
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </Card>
+                            </td>
+                            <td className="p-4 sm:p-6 text-center">
+                              {row.them === 'best' && (
+                                <div className="inline-flex items-center justify-center">
+                                  <div className="relative w-8 h-8">
+                                    <Circle
+                                      className="absolute inset-0 h-8 w-8 text-slate-300 fill-none"
+                                      strokeWidth={2.5}
+                                    />
+                                    <Circle
+                                      className="absolute h-5 w-5 text-slate-300 fill-none"
+                                      strokeWidth={2.5}
+                                      style={{ top: '6px', left: '6px' }}
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                              {row.them === 'good' && (
+                                <Circle
+                                  className="h-8 w-8 text-slate-300 mx-auto"
+                                  strokeWidth={2.5}
+                                />
+                              )}
+                              {row.them === 'fair' && (
+                                <Triangle
+                                  className="h-8 w-8 text-slate-300 mx-auto"
+                                  strokeWidth={2.5}
+                                />
+                              )}
+                              {row.them === 'poor' && (
+                                <X
+                                  className="h-8 w-8 text-slate-300 mx-auto"
+                                  strokeWidth={2.5}
+                                />
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </Card>
+                </div>
               </div>
             </div>
           </div>
@@ -491,154 +505,162 @@ export default function Home() {
 
         {/* CTA */}
         <section className="text-center mb-24 sm:mb-32">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-8">
-            SNSで&quot;伝わるカタチ&quot;を
-            <br className="sm:hidden" />
-            つくりませんか？
-          </h2>
-          <PrimaryButton type="button" onClick={scrollToForm}>
-            無料相談を依頼する
-          </PrimaryButton>
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-8">
+              SNSで&quot;伝わるカタチ&quot;を
+              <br className="sm:hidden" />
+              つくりませんか？
+            </h2>
+            <PrimaryButton type="button" onClick={scrollToForm}>
+              無料相談を依頼する
+            </PrimaryButton>
+          </div>
         </section>
 
         <Divider />
 
         {/* フォーム */}
         <section id="contact-form" className="mb-16">
-          <SectionTitle>無料相談フォーム</SectionTitle>
+          <div className="max-w-3xl mx-auto">
+            <SectionTitle>無料相談フォーム</SectionTitle>
 
-          <div className="relative">
-            <div
-              className="absolute -top-20 -left-20 w-64 h-64 rounded-full opacity-10 pointer-events-none"
-              style={{
-                background:
-                  'radial-gradient(circle, #6366f1 0%, transparent 70%)',
-                filter: 'blur(60px)',
-              }}
-            />
-            <div
-              className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full opacity-10 pointer-events-none"
-              style={{
-                background:
-                  'radial-gradient(circle, #22d3ee 0%, transparent 70%)',
-                filter: 'blur(60px)',
-              }}
-            />
+            <div className="relative">
+              <div
+                className="absolute -top-20 -left-20 w-64 h-64 rounded-full opacity-10 pointer-events-none"
+                style={{
+                  background:
+                    'radial-gradient(circle, #6366f1 0%, transparent 70%)',
+                  filter: 'blur(60px)',
+                }}
+              />
+              <div
+                className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full opacity-10 pointer-events-none"
+                style={{
+                  background:
+                    'radial-gradient(circle, #22d3ee 0%, transparent 70%)',
+                  filter: 'blur(60px)',
+                }}
+              />
 
-            <Card className="max-w-3xl mx-auto relative z-10 p-6 sm:p-10 lg:p-12">
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-6 sm:space-y-8"
-              >
-                <div>
-                  <Label
-                    htmlFor="company"
-                    className="text-slate-200 mb-2 block text-base sm:text-lg"
-                  >
-                    会社名 <span className="text-indigo-400">*</span>
-                  </Label>
-                  <Input
-                    id="company"
-                    name="company"
-                    autoComplete="organization"
-                    required
-                    className={inputClass}
-                    placeholder="株式会社〇〇"
-                  />
-                </div>
-
-                <div>
-                  <Label
-                    htmlFor="name"
-                    className="text-slate-200 mb-2 block text-base sm:text-lg"
-                  >
-                    担当者名 <span className="text-indigo-400">*</span>
-                  </Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    autoComplete="name"
-                    required
-                    className={inputClass}
-                    placeholder="山田太郎"
-                  />
-                </div>
-
-                <div>
-                  <Label
-                    htmlFor="email"
-                    className="text-slate-200 mb-2 block text-base sm:text-lg"
-                  >
-                    メールアドレス <span className="text-indigo-400">*</span>
-                  </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className={inputClass}
-                    placeholder="example@company.com"
-                  />
-                </div>
-
-                <div>
-                  <Label
-                    htmlFor="purpose"
-                    className="text-slate-200 mb-2 block text-base sm:text-lg"
-                  >
-                    目的
-                  </Label>
-                  <select id="purpose" name="purpose" className={selectClass}>
-                    <option value="">選択してください</option>
-                    <option value="customer-acquisition">集客</option>
-                    <option value="recruitment">採用</option>
-                    <option value="brand-strengthening">ブランド強化</option>
-                    <option value="awareness">認知</option>
-                    <option value="other">その他</option>
-                  </select>
-                </div>
-
-                <div>
-                  <Label
-                    htmlFor="timeline"
-                    className="text-slate-200 mb-2 block text-base sm:text-lg"
-                  >
-                    開始時期
-                  </Label>
-                  <select id="timeline" name="timeline" className={selectClass}>
-                    <option value="">選択してください</option>
-                    <option value="immediately">すぐに</option>
-                    <option value="within-1-month">1ヶ月以内</option>
-                    <option value="within-3-months">3ヶ月以内</option>
-                    <option value="undecided">未定</option>
-                  </select>
-                </div>
-
-                <div>
-                  <Label
-                    htmlFor="message"
-                    className="text-slate-200 mb-2 block text-base sm:text-lg"
-                  >
-                    自由記述
-                  </Label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    className={textareaClass}
-                    placeholder="ご質問やご要望などがあればご記入ください"
-                  />
-                </div>
-
-                <PrimaryButton
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full"
+              <Card className="relative z-10 p-6 sm:p-10 lg:p-12">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-6 sm:space-y-8"
                 >
-                  {isSubmitting ? '送信中...' : '送信する'}
-                </PrimaryButton>
-              </form>
-            </Card>
+                  <div>
+                    <Label
+                      htmlFor="company"
+                      className="text-slate-200 mb-2 block text-base sm:text-lg"
+                    >
+                      会社名 <span className="text-indigo-400">*</span>
+                    </Label>
+                    <Input
+                      id="company"
+                      name="company"
+                      autoComplete="organization"
+                      required
+                      className={inputClass}
+                      placeholder="株式会社〇〇"
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="name"
+                      className="text-slate-200 mb-2 block text-base sm:text-lg"
+                    >
+                      担当者名 <span className="text-indigo-400">*</span>
+                    </Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      autoComplete="name"
+                      required
+                      className={inputClass}
+                      placeholder="山田太郎"
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="email"
+                      className="text-slate-200 mb-2 block text-base sm:text-lg"
+                    >
+                      メールアドレス <span className="text-indigo-400">*</span>
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      className={inputClass}
+                      placeholder="example@company.com"
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="purpose"
+                      className="text-slate-200 mb-2 block text-base sm:text-lg"
+                    >
+                      目的
+                    </Label>
+                    <select id="purpose" name="purpose" className={selectClass}>
+                      <option value="">選択してください</option>
+                      <option value="customer-acquisition">集客</option>
+                      <option value="recruitment">採用</option>
+                      <option value="brand-strengthening">ブランド強化</option>
+                      <option value="awareness">認知</option>
+                      <option value="other">その他</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="timeline"
+                      className="text-slate-200 mb-2 block text-base sm:text-lg"
+                    >
+                      開始時期
+                    </Label>
+                    <select
+                      id="timeline"
+                      name="timeline"
+                      className={selectClass}
+                    >
+                      <option value="">選択してください</option>
+                      <option value="immediately">すぐに</option>
+                      <option value="within-1-month">1ヶ月以内</option>
+                      <option value="within-3-months">3ヶ月以内</option>
+                      <option value="undecided">未定</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="message"
+                      className="text-slate-200 mb-2 block text-base sm:text-lg"
+                    >
+                      自由記述
+                    </Label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      className={textareaClass}
+                      placeholder="ご質問やご要望などがあればご記入ください"
+                    />
+                  </div>
+
+                  <PrimaryButton
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full"
+                  >
+                    {isSubmitting ? '送信中...' : '送信する'}
+                  </PrimaryButton>
+                </form>
+              </Card>
+            </div>
           </div>
         </section>
 
