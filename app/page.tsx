@@ -56,27 +56,26 @@ export default function Home() {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        toast.success('送信が完了しました！');
+        if (response.ok) {
+      toast.success('送信が完了しました');
 
-        setFormData({
-          company: '',
-          name: '',
-          email: '',
-          purpose: '',
-          timeline: '',
-          message: '',
-        });
-      } else {
-        toast.error('送信に失敗しました…');
-      }
-    } catch (error) {
-      console.error('送信エラー:', error);
-      toast.error('送信に失敗しました…');
-    } finally {
-      setIsSubmitting(false);
+      setFormData({
+        company: '',
+        name: '',
+        email: '',
+        purpose: '',
+        timeline: '',
+        message: '',
+      });
+    } else {
+      toast.error('送信に失敗しました');
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error('送信に失敗しました');
+  } finally {
+    setIsSubmitting(false);
+  }
   return (
     <div className="min-h-screen text-white relative">
       {!prefersReducedMotion && <AnimatedBackground />}
