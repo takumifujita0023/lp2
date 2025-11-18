@@ -52,13 +52,12 @@ ${timeline || '未選択'}
 ${(message || 'なし').trim()}
 `.trim();
 
-    const data = await resend.emails.send({
-      from: process.env.FROM_EMAIL!,
-      to: process.env.TO_EMAIL!,
-      subject: 'SNS無料相談フォームから新規問い合わせ',
-      text: emailContent,
-    });
-
+const data = await resend.emails.send({
+  from: (process.env.FROM_EMAIL || '').trim(),
+  to: (process.env.TO_EMAIL || '').trim(),
+  subject: 'SNS無料相談フォームから新規問い合わせ',
+  text: emailContent,
+});
     return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error('Email send error:', error);
