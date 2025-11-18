@@ -1,20 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Check, X, Circle, Triangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 
-// 背景だけアニメーションさせるコンポーネント（中身の動きはそのまま）
+// 背景アニメーション（入力を邪魔しないように pointer-events-none）
 import { AnimatedBackground } from '@/components/animated/background';
 import { Particles } from '@/components/animated/particles';
 import { GeometricPatterns } from '@/components/animated/geometric-patterns';
@@ -30,16 +24,6 @@ export default function Home() {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
 
   const scrollToForm = () => {
     document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
@@ -54,15 +38,14 @@ export default function Home() {
     }
 
     setIsSubmitting(true);
-
     try {
-      const response = await fetch('/api/send', {
+      const res = await fetch('/api/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
+      if (res.ok) {
         toast.success('送信が完了しました');
         setFormData({
           company: '',
@@ -75,36 +58,33 @@ export default function Home() {
       } else {
         toast.error('送信に失敗しました');
       }
-    } catch (error) {
+    } catch (err) {
       toast.error('送信に失敗しました');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // 入力系コンポーネントの共通クラス（全部ダークで統一）
+  // 入力系の見た目を全部ここで統一（ダーク・見やすい・触りやすい）
   const inputClass =
-    'bg-white/[0.03] border-white/[0.1] text-white rounded-xl h-12 text-base sm:text-lg ' +
-    'focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner ' +
-    'placeholder:text-slate-500/70';
+    'bg-slate-900/70 border border-slate-600 text-white rounded-xl h-12 text-base sm:text-lg ' +
+    'px-3 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 ' +
+    'placeholder:text-slate-500';
 
   const selectTriggerClass =
-    'bg-white/[0.03] border-white/[0.1] text-white rounded-xl h-12 text-base sm:text-lg ' +
-    'focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner';
+    'bg-slate-900/70 border border-slate-600 text-white rounded-xl h-12 text-base sm:text-lg ' +
+    'px-3 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 ' +
+    'flex items-center justify-between';
 
   const textareaClass =
-    'bg-white/[0.03] border-white/[0.1] text-white rounded-xl min-h-32 text-base sm:text-lg ' +
-    'focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all shadow-inner ' +
-    'placeholder:text-slate-500/70';
+    'bg-slate-900/70 border border-slate-600 text-white rounded-xl min-h-32 text-base sm:text-lg ' +
+    'px-3 py-2 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 ' +
+    'placeholder:text-slate-500';
 
-  // シンプルなセクションタイトル
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-white tracking-wide">
-      {children}
-    </h2>
+    <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-white tracking-wide">{children}</h2>
   );
 
-  // シンプルなカードコンポーネント（アニメーションなし）
   const Card = ({
     children,
     className = '',
@@ -114,8 +94,8 @@ export default function Home() {
   }) => (
     <div
       className={
-        'bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md shadow-xl ' +
-        'shadow-black/30 ' +
+        'bg-slate-900/70 border border-slate-700 rounded-2xl backdrop-blur-md shadow-xl ' +
+        'shadow-black/40 ' +
         className
       }
     >
@@ -123,12 +103,10 @@ export default function Home() {
     </div>
   );
 
-  // シンプルな区切り線
   const Divider = () => (
-    <div className="my-16 h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+    <div className="my-16 h-px w-full bg-gradient-to-r from-transparent via-slate-500/50 to-transparent" />
   );
 
-  // シンプルなボタン
   const PrimaryButton = ({
     children,
     ...props
@@ -137,8 +115,8 @@ export default function Home() {
       {...props}
       className={
         'inline-flex items-center justify-center rounded-xl px-8 py-3 text-base sm:text-lg font-semibold ' +
-        'bg-gradient-to-r from-[#4f46e5] to-[#22d3ee] text-white shadow-lg shadow-[#22d3ee]/30 ' +
-        'hover:brightness-110 active:scale-[0.98] transition-all ' +
+        'bg-gradient-to-r from-indigo-500 to-cyan-400 text-white shadow-lg shadow-cyan-400/30 ' +
+        'hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed ' +
         (props.className ?? '')
       }
     >
@@ -148,15 +126,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white relative bg-[#020617]">
-      {/* 背景アニメーション（奥側） */}
-      {!prefersReducedMotion && <AnimatedBackground />}
-      {!prefersReducedMotion && <Particles />}
-      {!prefersReducedMotion && <GeometricPatterns />}
-      {!prefersReducedMotion && <FlowingLights />}
+      {/* 背景アニメーション（クリックを邪魔しないように pointer-events-none） */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <AnimatedBackground />
+        <Particles />
+        <GeometricPatterns />
+        <FlowingLights />
+      </div>
 
-      {/* コンテンツ本体（動きなし） */}
+      {/* コンテンツ本体 */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
-        {/* HERO セクション */}
+        {/* HERO */}
         <section className="text-center mb-24 sm:mb-32 pt-8 sm:pt-12 relative">
           <div className="absolute -inset-20 opacity-30 pointer-events-none">
             <div
@@ -175,23 +155,25 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="text-xl sm:text-2xl text-[#cbd5e1] mb-4">
+            <p className="text-xl sm:text-2xl text-slate-200 mb-4">
               集客・採用・ブランディングに悩む企業へ
             </p>
 
-            <p className="text-base sm:text-lg text-[#94a3b8] mb-10 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed">
               映像制作 × SNS運用代行
               <br className="sm:hidden" />
               企画〜撮影〜編集〜投稿〜分析までワンストップで全国対応
             </p>
 
-            <PrimaryButton onClick={scrollToForm}>無料相談を依頼する</PrimaryButton>
+            <PrimaryButton type="button" onClick={scrollToForm}>
+              無料相談を依頼する
+            </PrimaryButton>
           </div>
         </section>
 
         <Divider />
 
-        {/* お悩みセクション */}
+        {/* お悩み */}
         <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
           <SectionTitle>こんなお悩みありませんか？</SectionTitle>
           <div className="grid gap-4 sm:gap-6 max-w-3xl mx-auto">
@@ -205,7 +187,7 @@ export default function Home() {
               '何を投稿すべきか迷う',
             ].map((item, index) => (
               <Card key={index} className="p-5 sm:p-6">
-                <p className="text-[#cbd5e1] text-base sm:text-lg">{item}</p>
+                <p className="text-slate-200 text-base sm:text-lg">{item}</p>
               </Card>
             ))}
           </div>
@@ -213,7 +195,7 @@ export default function Home() {
 
         <Divider />
 
-        {/* 強みセクション */}
+        {/* 強み */}
         <section className="mb-24 sm:mb-32 mr-0 sm:mr-8">
           <SectionTitle>私たちの強み</SectionTitle>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -226,14 +208,14 @@ export default function Home() {
               '「なぜこの企画？」を言語化できる運用設計',
             ].map((item, index) => (
               <Card key={index} className="p-6 sm:p-8 relative overflow-hidden">
-                <div className="absolute top-4 right-4 text-5xl sm:text-6xl font-bold text-white/10">
+                <div className="absolute top-4 right-4 text-5xl sm:text-6xl font-bold text-slate-600/40">
                   {String(index + 1).padStart(2, '0')}
                 </div>
                 <div className="flex items-start gap-4 relative">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-[#4f46e5] to-[#6366f1] flex items-center justify-center shadow-lg shadow-[#6366f1]/50">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-400 flex items-center justify-center shadow-lg shadow-indigo-500/40">
                     <Check className="h-5 w-5" />
                   </div>
-                  <p className="text-[#cbd5e1] text-base sm:text-lg leading-relaxed">{item}</p>
+                  <p className="text-slate-200 text-base sm:text-lg leading-relaxed">{item}</p>
                 </div>
               </Card>
             ))}
@@ -242,14 +224,14 @@ export default function Home() {
 
         <Divider />
 
-        {/* 内製化支援 */}
+        {/* 内製化 */}
         <section className="mb-24 sm:mb-32 ml-0 sm:ml-8">
           <SectionTitle>内製化支援</SectionTitle>
           <Card className="max-w-4xl mx-auto p-8 sm:p-12">
-            <h3 className="text-xl sm:text-2xl font-bold mb-6 bg-gradient-to-r from-[#4f46e5] to-[#22d3ee] bg-clip-text text-transparent">
+            <h3 className="text-xl sm:text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
               SNS運用の「内製化」まで伴走可能
             </h3>
-            <p className="text-[#cbd5e1] text-base sm:text-lg leading-relaxed">
+            <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
               企画思考・台本構成・撮影方法・編集テンプレ・投稿ルール・分析方法など、
               御社のチームがSNS運用を自走できるまで徹底サポートいたします。
             </p>
@@ -263,16 +245,16 @@ export default function Home() {
           <SectionTitle>提供スタイル</SectionTitle>
           <div className="max-w-4xl mx-auto">
             <Card className="p-8 sm:p-10">
-              <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-[#4f46e5] to-[#22d3ee] bg-clip-text text-transparent">
+              <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
                 完全オーダーメイド
               </h3>
-              <p className="text-[#cbd5e1] text-lg sm:text-xl mb-8 font-medium">固定プランなし</p>
-              <p className="text-[#e2e8f0] text-lg sm:text-xl font-bold mb-6">組み合わせ自由</p>
+              <p className="text-slate-200 text-lg sm:text-xl mb-8 font-medium">固定プランなし</p>
+              <p className="text-slate-100 text-lg sm:text-xl font-bold mb-6">組み合わせ自由</p>
               <div className="flex flex-wrap gap-3">
                 {['企画', '台本', '撮影', '編集', '投稿代行', '分析', '内製化支援'].map((item) => (
                   <span
                     key={item}
-                    className="bg-white/[0.08] backdrop-blur-sm border border-white/[0.15] px-5 py-3 rounded-xl text-[#e2e8f0] text-base sm:text-lg font-medium"
+                    className="bg-slate-900/80 backdrop-blur-sm border border-slate-600 px-5 py-3 rounded-xl text-slate-100 text-base sm:text-lg font-medium"
                   >
                     {item}
                   </span>
@@ -294,10 +276,10 @@ export default function Home() {
               { title: 'インフルエンサー支援', result: 'TikTok ', number: '20,000人達成' },
             ].map((item, index) => (
               <Card key={index} className="p-6 sm:p-8 text-center">
-                <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-[#4f46e5] to-[#22d3ee] bg-clip-text text-transparent mb-4">
+                <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent mb-4">
                   {item.title}
                 </h3>
-                <p className="text-[#cbd5e1] text-base sm:text-lg leading-relaxed">
+                <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
                   {item.result}
                   <span className="font-bold text-xl sm:text-2xl text-white ml-1">{item.number}</span>
                 </p>
@@ -315,16 +297,16 @@ export default function Home() {
             <Card className="min-w-[600px] p-1">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-white/[0.1]">
-                    <th className="text-left p-4 sm:p-6 text-[#94a3b8] font-semibold text-sm sm:text-base">
+                  <tr className="border-b border-slate-600/80">
+                    <th className="text-left p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
                       項目
                     </th>
-                    <th className="text-center p-4 sm:p-6 font-bold text-base sm:text-lg relative">
-                      <span className="bg-gradient-to-r from-[#4f46e5] to-[#22d3ee] bg-clip-text text-transparent">
+                    <th className="text-center p-4 sm:p-6 font-bold text-base sm:text-lg">
+                      <span className="bg-gradient-to-r from-indigo-400 to-cyan-300 bg-clip-text text-transparent">
                         sociott
                       </span>
                     </th>
-                    <th className="text-center p-4 sm:p-6 text-[#94a3b8] font-semibold text-sm sm:text-base">
+                    <th className="text-center p-4 sm:p-6 text-slate-400 font-semibold text-sm sm:text-base">
                       他社
                     </th>
                   </tr>
@@ -341,18 +323,18 @@ export default function Home() {
                   ].map((row, index) => (
                     <tr
                       key={index}
-                      className="border-b border-white/[0.05] last:border-0 hover:bg-white/[0.03] transition-colors"
+                      className="border-b border-slate-700/80 last:border-0 hover:bg-slate-800/60 transition-colors"
                     >
-                      <td className="p-4 sm:p-6 text-[#cbd5e1] text-sm sm:text-base">{row.item}</td>
+                      <td className="p-4 sm:p-6 text-slate-200 text-sm sm:text-base">{row.item}</td>
                       <td className="p-4 sm:p-6 text-center">
                         <div className="inline-flex items-center justify-center">
                           <div className="relative w-8 h-8">
                             <Circle
-                              className="absolute inset-0 h-8 w-8 text-[#6366f1] fill-none"
+                              className="absolute inset-0 h-8 w-8 text-indigo-400 fill-none"
                               strokeWidth={2.5}
                             />
                             <Circle
-                              className="absolute h-5 w-5 text-[#6366f1] fill-none"
+                              className="absolute h-5 w-5 text-indigo-400 fill-none"
                               strokeWidth={2.5}
                               style={{ top: '6px', left: '6px' }}
                             />
@@ -364,11 +346,11 @@ export default function Home() {
                           <div className="inline-flex items-center justify-center">
                             <div className="relative w-8 h-8">
                               <Circle
-                                className="absolute inset-0 h-8 w-8 text-[#cbd5e1] fill-none"
+                                className="absolute inset-0 h-8 w-8 text-slate-300 fill-none"
                                 strokeWidth={2.5}
                               />
                               <Circle
-                                className="absolute h-5 w-5 text-[#cbd5e1] fill-none"
+                                className="absolute h-5 w-5 text-slate-300 fill-none"
                                 strokeWidth={2.5}
                                 style={{ top: '6px', left: '6px' }}
                               />
@@ -376,13 +358,13 @@ export default function Home() {
                           </div>
                         )}
                         {row.them === 'good' && (
-                          <Circle className="h-8 w-8 text-[#cbd5e1] mx-auto" strokeWidth={2.5} />
+                          <Circle className="h-8 w-8 text-slate-300 mx-auto" strokeWidth={2.5} />
                         )}
                         {row.them === 'fair' && (
-                          <Triangle className="h-8 w-8 text-[#cbd5e1] mx-auto" strokeWidth={2.5} />
+                          <Triangle className="h-8 w-8 text-slate-300 mx-auto" strokeWidth={2.5} />
                         )}
                         {row.them === 'poor' && (
-                          <X className="h-8 w-8 text-[#cbd5e1] mx-auto" strokeWidth={2.5} />
+                          <X className="h-8 w-8 text-slate-300 mx-auto" strokeWidth={2.5} />
                         )}
                       </td>
                     </tr>
@@ -402,7 +384,9 @@ export default function Home() {
             <br className="sm:hidden" />
             つくりませんか？
           </h2>
-          <PrimaryButton onClick={scrollToForm}>無料相談を依頼する</PrimaryButton>
+          <PrimaryButton type="button" onClick={scrollToForm}>
+            無料相談を依頼する
+          </PrimaryButton>
         </section>
 
         <Divider />
@@ -413,14 +397,14 @@ export default function Home() {
 
           <div className="relative">
             <div
-              className="absolute -top-20 -left-20 w-64 h-64 rounded-full opacity-10"
+              className="absolute -top-20 -left-20 w-64 h-64 rounded-full opacity-10 pointer-events-none"
               style={{
                 background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)',
                 filter: 'blur(60px)',
               }}
             />
             <div
-              className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full opacity-10"
+              className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full opacity-10 pointer-events-none"
               style={{
                 background: 'radial-gradient(circle, #22d3ee 0%, transparent 70%)',
                 filter: 'blur(60px)',
@@ -432,12 +416,13 @@ export default function Home() {
                 <div>
                   <Label
                     htmlFor="company"
-                    className="text-[#cbd5e1] mb-2 block text-base sm:text-lg"
+                    className="text-slate-200 mb-2 block text-base sm:text-lg"
                   >
-                    会社名 <span className="text-[#6366f1]">*</span>
+                    会社名 <span className="text-indigo-400">*</span>
                   </Label>
                   <Input
                     id="company"
+                    autoComplete="organization"
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     required
@@ -447,11 +432,12 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <Label htmlFor="name" className="text-[#cbd5e1] mb-2 block text-base sm:text-lg">
-                    担当者名 <span className="text-[#6366f1]">*</span>
+                  <Label htmlFor="name" className="text-slate-200 mb-2 block text-base sm:text-lg">
+                    担当者名 <span className="text-indigo-400">*</span>
                   </Label>
                   <Input
                     id="name"
+                    autoComplete="name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
@@ -463,13 +449,14 @@ export default function Home() {
                 <div>
                   <Label
                     htmlFor="email"
-                    className="text-[#cbd5e1] mb-2 block text-base sm:text-lg"
+                    className="text-slate-200 mb-2 block text-base sm:text-lg"
                   >
-                    メールアドレス <span className="text-[#6366f1]">*</span>
+                    メールアドレス <span className="text-indigo-400">*</span>
                   </Label>
                   <Input
                     id="email"
                     type="email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
@@ -481,7 +468,7 @@ export default function Home() {
                 <div>
                   <Label
                     htmlFor="purpose"
-                    className="text-[#cbd5e1] mb-2 block text-base sm:text-lg"
+                    className="text-slate-200 mb-2 block text-base sm:text-lg"
                   >
                     目的
                   </Label>
@@ -492,7 +479,7 @@ export default function Home() {
                     <SelectTrigger className={selectTriggerClass}>
                       <SelectValue placeholder="選択してください" />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#020617] border-white/[0.1] text-white">
+                    <SelectContent className="bg-slate-900 border border-slate-600 text-white">
                       <SelectItem value="customer-acquisition">集客</SelectItem>
                       <SelectItem value="recruitment">採用</SelectItem>
                       <SelectItem value="brand-strengthening">ブランド強化</SelectItem>
@@ -505,7 +492,7 @@ export default function Home() {
                 <div>
                   <Label
                     htmlFor="timeline"
-                    className="text-[#cbd5e1] mb-2 block text-base sm:text-lg"
+                    className="text-slate-200 mb-2 block text-base sm:text-lg"
                   >
                     開始時期
                   </Label>
@@ -516,7 +503,7 @@ export default function Home() {
                     <SelectTrigger className={selectTriggerClass}>
                       <SelectValue placeholder="選択してください" />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#020617] border-white/[0.1] text-white">
+                    <SelectContent className="bg-slate-900 border border-slate-600 text-white">
                       <SelectItem value="immediately">すぐに</SelectItem>
                       <SelectItem value="within-1-month">1ヶ月以内</SelectItem>
                       <SelectItem value="within-3-months">3ヶ月以内</SelectItem>
@@ -528,7 +515,7 @@ export default function Home() {
                 <div>
                   <Label
                     htmlFor="message"
-                    className="text-[#cbd5e1] mb-2 block text-base sm:text-lg"
+                    className="text-slate-200 mb-2 block text-base sm:text-lg"
                   >
                     自由記述
                   </Label>
@@ -549,7 +536,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="text-center text-gray-500 text-sm py-8 border-t border-white/[0.05]">
+        <footer className="text-center text-slate-500 text-sm py-8 border-t border-slate-700/70">
           <p>© 2024 sociott. All rights reserved.</p>
         </footer>
       </div>
